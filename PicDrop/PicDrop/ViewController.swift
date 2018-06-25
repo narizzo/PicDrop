@@ -40,8 +40,7 @@ class ViewController: UIViewController {
   }
   
   @IBAction func tappedCamera(_ sender: UIButton) {
-    print("camera")
-    
+    performSegue(withIdentifier: "takePictureSegue", sender: nil)
   }
   
 }
