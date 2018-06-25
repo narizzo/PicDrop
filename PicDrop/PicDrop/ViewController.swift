@@ -20,6 +20,7 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    loadNextPicture()
   }
   
   override func didReceiveMemoryWarning() {
@@ -41,6 +42,10 @@ class ViewController: UIViewController {
   
   @IBAction func tappedCamera(_ sender: UIButton) {
     performSegue(withIdentifier: "takePictureSegue", sender: nil)
+  }
+  
+  private func loadNextPicture() {
+    
   }
   
 }

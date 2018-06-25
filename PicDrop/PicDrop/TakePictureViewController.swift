@@ -8,15 +8,17 @@
 
 import UIKit
 import MapKit
+import FirebaseStorage
+import FirebaseDatabase
+import FirebaseAuth
 
 fileprivate enum State {
   case needsPicture
   case hasPicture
+  case canceled
 }
 
 class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
-  
-  @IBOutlet weak var photo: UIImageView!
   
   private var locationManager = CLLocationManager()
   private var imagePicker = UIImagePickerController()
@@ -34,6 +36,8 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     switch state {
     case .needsPicture:
       verifyPhotoAuth()
+    case .canceled:
+      fallthrough
     default:
       dismiss(animated: true, completion: nil)
     }
@@ -54,7 +58,7 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
       imagePicker.sourceType = .camera;
       imagePicker.cameraFlashMode = .off
       imagePicker.allowsEditing = false
-  
+      
       
       self.present(imagePicker, animated: true, completion: nil)
     } else {
@@ -69,13 +73,21 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     present(alertVC, animated: true, completion: nil)
   }
   
+  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    state = .canceled
+    dismiss(animated: true, completion: nil)
+  }
+  
+  
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     
     state = .hasPicture
     
     let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-    photo.image = image
     
+    upload(image)
+    
+    /* NOT CURRENTLY BEING USED */
     // need to loop until location is accurate
     locationManager.desiredAccuracy = kCLLocationAccuracyBest
     locationManager.startUpdatingLocation()
@@ -87,5 +99,26 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     }
     dismiss(animated: true, completion: nil)
   }
+  
+  private func upload(_ image: UIImage) {
+    let imagesFolder = Storage.storage().reference().child("photos")
+    let nsuuid = NSUUID().uuidString
+    let imageData = UIImageJPEGRepresentation(image, 0.1)!
+    imagesFolder.child("\(nsuuid).jpg").putData(imageData, metadata: nil, completion: { (metadata, error)
+      in
+      if let error = error {
+        print(error)
+      } else {
+        print("updating database")
+        // store picture id in database
+        //let currentUser = Auth.auth().currentUser!
+    
+        let dbRef = Database.database().reference()
+        dbRef.child("posts").child(nsuuid).setValue(metadata!.downloadURL()!.absoluteString)
+      }
+    })
+  }
+  
+  
   
 }
