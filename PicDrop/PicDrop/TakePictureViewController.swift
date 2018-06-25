@@ -104,15 +104,13 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     let imagesFolder = Storage.storage().reference().child("photos")
     let nsuuid = NSUUID().uuidString
     let imageData = UIImageJPEGRepresentation(image, 0.1)!
+    // async upload to firebase
     imagesFolder.child("\(nsuuid).jpg").putData(imageData, metadata: nil, completion: { (metadata, error)
       in
       if let error = error {
         print(error)
       } else {
-        print("updating database")
-        // store picture id in database
-        //let currentUser = Auth.auth().currentUser!
-    
+        // store image info in database
         let dbRef = Database.database().reference()
         dbRef.child("posts").child(nsuuid).setValue(metadata!.downloadURL()!.absoluteString)
       }
