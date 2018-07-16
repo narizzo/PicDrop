@@ -20,10 +20,14 @@ fileprivate enum State {
 
 class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
   
-  private var locationManager = CLLocationManager()
+  private var locationManager: CLLocationManager = {
+    let manager = CLLocationManager()
+    manager.desiredAccuracy = kCLLocationAccuracyBest
+    return manager
+  }()
   private var imagePicker = UIImagePickerController()
-  
   private var state: State = State.needsPicture
+  private let photoUploadManager = PhotoUploadManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -53,12 +57,13 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   }
   
   private func shootPhoto() {
+    locationManager.startUpdatingLocation()
+    
     if UIImagePickerController.isSourceTypeAvailable(.camera) {
       imagePicker.delegate = self
       imagePicker.sourceType = .camera;
       imagePicker.cameraFlashMode = .off
-      imagePicker.allowsEditing = false
-      
+      imagePicker.allowsEditing = true
       
       self.present(imagePicker, animated: true, completion: nil)
     } else {
@@ -80,43 +85,12 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-    
+    locationManager.stopUpdatingLocation()
     state = .hasPicture
-    
-    let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-    
-    upload(image)
-    
-    /* NOT CURRENTLY BEING USED */
-    // need to loop until location is accurate
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    locationManager.startUpdatingLocation()
-    
-    if let location = locationManager.location {
-      print("location: \(location.coordinate.latitude) by \(location.coordinate.longitude)")
-      locationManager.stopUpdatingLocation()
-      
+    if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+      photoUploadManager.upload(photo: image)
     }
     dismiss(animated: true, completion: nil)
   }
-  
-  private func upload(_ image: UIImage) {
-    let imagesFolder = Storage.storage().reference().child("photos")
-    let nsuuid = NSUUID().uuidString
-    let imageData = UIImageJPEGRepresentation(image, 0.1)!
-    // async upload to firebase
-    imagesFolder.child("\(nsuuid).jpg").putData(imageData, metadata: nil, completion: { (metadata, error)
-      in
-      if let error = error {
-        print(error)
-      } else {
-        // store image info in database
-        let dbRef = Database.database().reference()
-        dbRef.child("posts").child(nsuuid).setValue(metadata!.downloadURL()!.absoluteString)
-      }
-    })
-  }
-  
-  
   
 }
