@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
+import GeoFire
 
 class ViewController: UIViewController {
   
@@ -59,7 +60,7 @@ class ViewController: UIViewController {
       let storageRef = self.storage.reference(forURL: downloadURL)
       storageRef.getData(maxSize: 1 * 2436 * 1125) { ( data, error) -> Void in
         guard error == nil else {
-          print(error?.localizedDescription)
+          print(error!.localizedDescription)
           return
         }
         guard let data = data else {

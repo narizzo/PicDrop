@@ -63,7 +63,7 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
       imagePicker.delegate = self
       imagePicker.sourceType = .camera;
       imagePicker.cameraFlashMode = .off
-      imagePicker.allowsEditing = true
+      imagePicker.allowsEditing = false
       
       self.present(imagePicker, animated: true, completion: nil)
     } else {
@@ -88,7 +88,11 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     locationManager.stopUpdatingLocation()
     state = .hasPicture
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      photoUploadManager.upload(photo: image)
+      guard let location = locationManager.location else {
+        print("Error: Location not valid")
+        return
+      }
+      photoUploadManager.upload(photo: image, location: location)
     }
     dismiss(animated: true, completion: nil)
   }
