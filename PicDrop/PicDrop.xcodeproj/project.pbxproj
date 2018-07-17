@@ -7,15 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01285A0420E02BCD002CF548 /* TakePictureViewController.swift */; };
+		0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */; };
 		019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D709E20E0022B0087C21C /* AppDelegate.swift */; };
 		019D70A120E0022B0087C21C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A020E0022B0087C21C /* ViewController.swift */; };
 		019D70A420E0022B0087C21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 019D70A220E0022B0087C21C /* Main.storyboard */; };
 		019D70A720E0022B0087C21C /* PicDrop.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A520E0022B0087C21C /* PicDrop.xcdatamodeld */; };
 		019D70A920E0022C0087C21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 019D70A820E0022C0087C21C /* Assets.xcassets */; };
 		019D70AC20E0022C0087C21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 019D70AA20E0022C0087C21C /* LaunchScreen.storyboard */; };
+		019D70B420E0037B0087C21C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 019D70B320E0037B0087C21C /* GoogleService-Info.plist */; };
+		01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D6A77520E1695B00A6863B /* SignInViewController.swift */; };
+		A159AA3339D1F7E6872BEA24 /* Pods_PicDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D83E0FB8C831C46FC0AFC8D /* Pods_PicDrop.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01285A0420E02BCD002CF548 /* TakePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakePictureViewController.swift; sourceTree = "<group>"; };
+		0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUploadManager.swift; sourceTree = "<group>"; };
 		019D709B20E0022B0087C21C /* PicDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		019D709E20E0022B0087C21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		019D70A020E0022B0087C21C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -24,6 +31,11 @@
 		019D70A820E0022C0087C21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		019D70AB20E0022C0087C21C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		019D70AD20E0022C0087C21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		019D70B320E0037B0087C21C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		01D6A77520E1695B00A6863B /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		27CC724ED3416975DD334CA4 /* Pods-PicDrop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicDrop.release.xcconfig"; path = "Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop.release.xcconfig"; sourceTree = "<group>"; };
+		5D83E0FB8C831C46FC0AFC8D /* Pods_PicDrop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PicDrop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A949E2ECB921CE524322BF2 /* Pods-PicDrop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicDrop.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,17 +43,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A159AA3339D1F7E6872BEA24 /* Pods_PicDrop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0199A76620FD3C9F00B261F6 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		019D709220E0022A0087C21C = {
 			isa = PBXGroup;
 			children = (
+				0199A76620FD3C9F00B261F6 /* Networking */,
 				019D709D20E0022B0087C21C /* PicDrop */,
 				019D709C20E0022B0087C21C /* Products */,
+				80829EEB6D64C9C625B852D8 /* Pods */,
+				A7AC4E376A7C50B3BED4F303 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,14 +81,34 @@
 			isa = PBXGroup;
 			children = (
 				019D709E20E0022B0087C21C /* AppDelegate.swift */,
+				01D6A77520E1695B00A6863B /* SignInViewController.swift */,
 				019D70A020E0022B0087C21C /* ViewController.swift */,
+				01285A0420E02BCD002CF548 /* TakePictureViewController.swift */,
 				019D70A220E0022B0087C21C /* Main.storyboard */,
 				019D70A820E0022C0087C21C /* Assets.xcassets */,
 				019D70AA20E0022C0087C21C /* LaunchScreen.storyboard */,
 				019D70AD20E0022C0087C21C /* Info.plist */,
 				019D70A520E0022B0087C21C /* PicDrop.xcdatamodeld */,
+				019D70B320E0037B0087C21C /* GoogleService-Info.plist */,
 			);
 			path = PicDrop;
+			sourceTree = "<group>";
+		};
+		80829EEB6D64C9C625B852D8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9A949E2ECB921CE524322BF2 /* Pods-PicDrop.debug.xcconfig */,
+				27CC724ED3416975DD334CA4 /* Pods-PicDrop.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		A7AC4E376A7C50B3BED4F303 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5D83E0FB8C831C46FC0AFC8D /* Pods_PicDrop.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +118,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 019D70B020E0022C0087C21C /* Build configuration list for PBXNativeTarget "PicDrop" */;
 			buildPhases = (
+				AB8D42675292B9AB3D77AA59 /* [CP] Check Pods Manifest.lock */,
 				019D709720E0022B0087C21C /* Sources */,
 				019D709820E0022B0087C21C /* Frameworks */,
 				019D709920E0022B0087C21C /* Resources */,
+				469231F47F5281B279D858CE /* [CP] Embed Pods Frameworks */,
+				4A1EB8FC642458EC3190E50A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -126,12 +173,84 @@
 			buildActionMask = 2147483647;
 			files = (
 				019D70AC20E0022C0087C21C /* LaunchScreen.storyboard in Resources */,
+				019D70B420E0037B0087C21C /* GoogleService-Info.plist in Resources */,
 				019D70A920E0022C0087C21C /* Assets.xcassets in Resources */,
 				019D70A420E0022B0087C21C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		469231F47F5281B279D858CE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4A1EB8FC642458EC3190E50A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebaseGoogleAuthUI.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseUI/FirebasePhoneAuthUI.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebaseGoogleAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FirebasePhoneAuthUI.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AB8D42675292B9AB3D77AA59 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PicDrop-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		019D709720E0022B0087C21C /* Sources */ = {
@@ -140,7 +259,10 @@
 			files = (
 				019D70A120E0022B0087C21C /* ViewController.swift in Sources */,
 				019D70A720E0022B0087C21C /* PicDrop.xcdatamodeld in Sources */,
+				01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */,
+				01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */,
 				019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */,
+				0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,6 +404,7 @@
 		};
 		019D70B120E0022C0087C21C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A949E2ECB921CE524322BF2 /* Pods-PicDrop.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -300,6 +423,7 @@
 		};
 		019D70B220E0022C0087C21C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27CC724ED3416975DD334CA4 /* Pods-PicDrop.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

@@ -69,7 +69,3 @@ fastlane/test_output
 
 # Firebase
 GoogleService-Info.plist
-
-# Xcode
-**.pbxproj
-**.storyboard
