@@ -1,5 +1,5 @@
 //
-//  SignInVC.swift
+//  SignInViewController.swift
 //  PicDrop
 //
 //  Created by Nicholas Rizzo on 6/25/18.
@@ -8,8 +8,9 @@
 
 import UIKit
 import FirebaseAuth
+//import GoogleSignIn
 
-class SignInVC: UIViewController {
+class SignInViewController: UIViewController {
   
   private var picDropLabel = UILabel()
   private var signInErrorLabel = UILabel()
@@ -17,6 +18,7 @@ class SignInVC: UIViewController {
   private var usernameField = UITextField()
   private var passwordField = UITextField()
   
+  //private var googleSignIn 
   private var signInButton = UIButton()
   private var createAccountButton = UIButton()
   private var skipSignInButton = UIButton()
@@ -25,7 +27,7 @@ class SignInVC: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    view.backgroundColor = UIColor.white
+    view.backgroundColor = UIColor.purple
     
     turnOffMasksForUIObjects()
     addSubviews()
@@ -211,7 +213,7 @@ class SignInVC: UIViewController {
           self.showSignInError()
         } else {
           print("signed in")
-          self.showMainViewController()
+          self.showPostsViewController()
         }
       }
     }
@@ -230,22 +232,24 @@ class SignInVC: UIViewController {
           self.showSignInError()
         } else {
           print("Created an account")
-          self.showMainViewController()
+          self.showPostsViewController()
         }
       }
     }
   }
   
   @objc private func skipSignIn() {
-    showMainViewController()
+    showPostsViewController()
   }
   
   @objc private func forgotCredentials() {
     print("forgot Credentials")
   }
   
-  private func showMainViewController() {
-    performSegue(withIdentifier: "showMainSegue", sender: nil)
+  func showPostsViewController() {
+    let seePostsVC = PostsViewController()
+    let navController = UINavigationController(rootViewController: seePostsVC)
+    present(navController, animated: true, completion: nil)
   }
   
 }

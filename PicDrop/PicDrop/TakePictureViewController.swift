@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import MapKit
+import CoreLocation
 import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
@@ -18,13 +18,13 @@ fileprivate enum State {
   case canceled
 }
 
-class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
+class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  private var locationManager: CLLocationManager = {
-    let manager = CLLocationManager()
-    manager.desiredAccuracy = kCLLocationAccuracyBest
-    return manager
-  }()
+//  private var locationManager: CLLocationManager = {
+//    let manager = CLLocationManager()
+//    manager.desiredAccuracy = kCLLocationAccuracyBest
+//    return manager
+//  }()
   private var imagePicker = UIImagePickerController()
   private var state: State = State.needsPicture
   private let photoUploadManager = PhotoUploadManager()
@@ -49,7 +49,7 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   private func verifyPhotoAuth() {
     if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-      locationManager.delegate = self
+      //locationManager.delegate = self
       shootPhoto()
     } else {
       locationManager.requestWhenInUseAuthorization()
