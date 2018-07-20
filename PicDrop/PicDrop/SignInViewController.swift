@@ -81,7 +81,6 @@ class SignInViewController: UIViewController {
     //usernameField.textRect(forBounds: UIEdgeInsetsInsetRect(usernameField.bounds, UIEdgeInsetsMake(0, 15, 0, 15)))
     //usernameField.placeholderRect(forBounds: UIEdgeInsetsInsetRect(usernameField.bounds, UIEdgeInsetsMake(0, 15, 0, 15)))
     
-    usernameField.backgroundColor = UIColor.orange
     usernameField.returnKeyType = .next
     usernameField.textColor = UIColor.black
     usernameField.font = usernameField.font?.withSize(23)
@@ -90,7 +89,6 @@ class SignInViewController: UIViewController {
   private func setupPasswordField() {
     passwordField.attributedPlaceholder = NSAttributedString(string: "password", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray])
     passwordField.isSecureTextEntry = true
-    passwordField.backgroundColor = UIColor.orange
     passwordField.returnKeyType = .done
     passwordField.textColor = UIColor.black
     passwordField.font = usernameField.font?.withSize(23)
@@ -102,7 +100,6 @@ class SignInViewController: UIViewController {
     signInButton.titleLabel?.textAlignment = .center
     signInButton.titleLabel?.font = signInButton.titleLabel?.font.withSize(35)
     signInButton.setTitleColor(UIColor.black, for: .normal)
-    signInButton.backgroundColor = UIColor.orange
     
     signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
   }
@@ -113,7 +110,6 @@ class SignInViewController: UIViewController {
     createAccountButton.titleLabel?.font = signInButton.titleLabel?.font.withSize(35)
     createAccountButton.titleLabel?.adjustsFontSizeToFitWidth = true
     createAccountButton.setTitleColor(UIColor.black, for: .normal)
-    createAccountButton.backgroundColor = UIColor.orange
     
     createAccountButton.addTarget(self, action: #selector(createAccount), for: .touchUpInside)
   }
@@ -124,7 +120,6 @@ class SignInViewController: UIViewController {
     skipSignInButton.titleLabel?.font = signInButton.titleLabel?.font.withSize(35)
     skipSignInButton.titleLabel?.adjustsFontSizeToFitWidth = true
     skipSignInButton.setTitleColor(UIColor.black, for: .normal)
-    skipSignInButton.backgroundColor = UIColor.orange
     
     skipSignInButton.addTarget(self, action: #selector(skipSignIn), for: .touchUpInside)
   }
@@ -135,7 +130,6 @@ class SignInViewController: UIViewController {
     forgotCredentialsButton.titleLabel?.font = signInButton.titleLabel?.font.withSize(35)
     forgotCredentialsButton.titleLabel?.adjustsFontSizeToFitWidth = true
     forgotCredentialsButton.setTitleColor(UIColor.black, for: .normal)
-    forgotCredentialsButton.backgroundColor = UIColor.orange
     
     forgotCredentialsButton.addTarget(self, action: #selector(forgotCredentials), for: .touchUpInside)
   }
@@ -248,8 +242,7 @@ class SignInViewController: UIViewController {
   
   func showPostsViewController() {
     let seePostsVC = PostsViewController()
-    let navController = UINavigationController(rootViewController: seePostsVC)
-    present(navController, animated: true, completion: nil)
+    present(seePostsVC, animated: true, completion: nil)
   }
   
 }

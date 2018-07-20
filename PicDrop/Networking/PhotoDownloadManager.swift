@@ -18,7 +18,7 @@ protocol PhotoDownloadDelegate: class {
 
 class PhotoDownloadManager {
   
-  var delegate: PhotoDownloadDelegate!
+  weak var delegate: PhotoDownloadDelegate?
   
   private let storage = Storage.storage()
   private var data = Data()
@@ -71,7 +71,7 @@ class PhotoDownloadManager {
           }
           
           if let photo = UIImage(data: imageData) {
-            self.delegate.photoHasFinishedDownloading(photo)
+            self.delegate?.photoHasFinishedDownloading(photo)
           }
         })
       }
