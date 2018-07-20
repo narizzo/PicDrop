@@ -14,14 +14,22 @@ import GeoFire
 
 class PostsViewController: UIViewController {
   
+  // MARK: - SettingsMenu Data
+  let settingsMenuOptions = ["Username", "Email", "Change password", "About", "Logout"]
+  
   // MARK: - Instance Variables
-  let imageView = UIImageView()
+  lazy var tinderImageView: TinderImageView = {
+    let tiv = TinderImageView(frame: .zero)
+    tiv.delegate = self
+    return tiv
+  }()
   
   private var isHUDHidden = false
   private let verticalEllipsisButton = UIButton()
   private let photoButton = UIButton()
-
-  private lazy var photoDownloadManager: PhotoDownloadManager = {
+  private let cellHeight: CGFloat = 50
+  
+  lazy var photoDownloadManager: PhotoDownloadManager = {
     let manager = PhotoDownloadManager()
     manager.delegate = self
     return manager
@@ -36,24 +44,36 @@ class PostsViewController: UIViewController {
   }()
   private lazy var settingsMenu: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
+    layout.itemSize = CGSize(width: self.view.bounds.width, height: cellHeight)
+    layout.minimumLineSpacing = 0
+    
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    cv.register(SettingValueCell.self, forCellWithReuseIdentifier: Constants.Reuse.settingValueCell)
     cv.backgroundColor = UIColor.cyan
     cv.translatesAutoresizingMaskIntoConstraints = false
+    
+    cv.dataSource = self
+    cv.delegate = self
     return cv
   }()
+  
+  private var settingsMenuHeight: CGFloat {
+    get {
+      return CGFloat(settingsMenuOptions.count) * cellHeight
+    }
+  }
   
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
     toggleHUD()
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    //photoDownloadManager.getNearbyPosts()
+    photoDownloadManager.getNearbyPosts()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     addSubviews()
-    setupImageView()
     setupProfileButton()
     setupTakePhotoButton()
     setupSettingsMenu()
@@ -61,29 +81,29 @@ class PostsViewController: UIViewController {
   
   // MARK: - View Configuration
   private func addSubviews() {
-    self.view.addSubview(imageView)
+    self.view.addSubview(tinderImageView)
     self.view.addSubview(verticalEllipsisButton)
     self.view.addSubview(photoButton)
     self.view.addSubview(blurView)
     self.view.addSubview(settingsMenu)
   }
   
-  private func setupImageView() {
-    imageView.translatesAutoresizingMaskIntoConstraints = false
-    
-    NSLayoutConstraint.activate([
-      imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-      imageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-      imageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-      imageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-      ])
-    
-    let tapGestureRecognizer = UITapGestureRecognizer()
-    tapGestureRecognizer.addTarget(self, action: #selector(toggleHUD))
-    imageView.addGestureRecognizer(tapGestureRecognizer)
-    imageView.isUserInteractionEnabled = true
-    imageView.backgroundColor = UIColor.black
-  }
+//  private func setupImageView() {
+//    imageView.translatesAutoresizingMaskIntoConstraints = false
+//
+//    NSLayoutConstraint.activate([
+//      imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+//      imageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
+//      imageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+//      imageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+//      ])
+//
+//    let tapGestureRecognizer = UITapGestureRecognizer()
+//    tapGestureRecognizer.addTarget(self, action: #selector(toggleHUD))
+//    imageView.addGestureRecognizer(tapGestureRecognizer)
+//    imageView.isUserInteractionEnabled = true
+//    imageView.backgroundColor = UIColor.black
+//  }
   
   private func setupTakePhotoButton() {
     photoButton.translatesAutoresizingMaskIntoConstraints = false
@@ -104,7 +124,7 @@ class PostsViewController: UIViewController {
       settingsMenu.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
       settingsMenu.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
       settingsMenu.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-      settingsMenu.heightAnchor.constraint(equalToConstant: 300)
+      settingsMenu.heightAnchor.constraint(equalToConstant: settingsMenuHeight)
       ])
     
     settingsMenu.setNeedsLayout()
@@ -117,7 +137,7 @@ class PostsViewController: UIViewController {
     present(TakePictureViewController(), animated: true, completion: nil)
   }
   
-  @objc private func toggleHUD() {
+  @objc func toggleHUD() {
     isHUDHidden = !isHUDHidden
     setViews(hidden: isHUDHidden, duration: 0.2, views: verticalEllipsisButton, photoButton)
   }

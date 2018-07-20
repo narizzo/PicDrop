@@ -13,7 +13,7 @@ extension PostsViewController: PhotoDownloadDelegate {
   
   func photoHasFinishedDownloading(_ photo: UIImage) {
     DispatchQueue.main.async {
-      self.imageView.image = photo
+      self.tinderImageView.setImage(to: photo)
     }
   }
   

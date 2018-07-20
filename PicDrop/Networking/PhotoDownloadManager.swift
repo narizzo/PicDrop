@@ -52,10 +52,11 @@ class PhotoDownloadManager {
     }
   }
   
-  private func downloadNextPost() {
+  func downloadNextPost() {
     guard let postID = keyCollector.first else {
       return
     }
+    self.keyCollector.removeFirst()
     
     dbPostsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
       if let downloadURL = snapshot.value as? String {

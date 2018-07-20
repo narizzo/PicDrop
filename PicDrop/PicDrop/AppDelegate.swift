@@ -51,9 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate { //}, GIDSignInDelegate {
     }
     
     if let _ = Auth.auth().currentUser {
-      let postsVC = PostsViewController()
-      let navController = UINavigationController(rootViewController: postsVC)
-      window.rootViewController = navController
+      window.rootViewController = PostsViewController()
     } else {
       window.rootViewController = SignInViewController()
     }
