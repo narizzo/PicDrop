@@ -14,9 +14,6 @@ import GeoFire
 
 class PostsViewController: UIViewController {
   
-  // MARK: - SettingsMenu Data
-  let settingsMenuOptions = ["Username", "Email", "Change password", "About", "Logout"]
-  
   // MARK: - Instance Variables
   lazy var tinderImageView: TinderImageView = {
     let tiv = TinderImageView(frame: .zero)
@@ -27,41 +24,24 @@ class PostsViewController: UIViewController {
   private var isHUDHidden = false
   private let verticalEllipsisButton = UIButton()
   private let photoButton = UIButton()
-  private let cellHeight: CGFloat = 50
   
-  lazy var photoDownloadManager: PhotoDownloadManager = {
-    let manager = PhotoDownloadManager()
-    manager.delegate = self
-    return manager
-  }()
   private lazy var blurView: UIVisualEffectView = {
     let blur = UIBlurEffect(style: UIBlurEffectStyle.dark)
     let blurView = UIVisualEffectView(effect: blur)
     blurView.alpha = 0.0
     blurView.frame = self.view.bounds
-    
     return blurView
   }()
-  private lazy var settingsMenu: UICollectionView = {
-    let layout = UICollectionViewFlowLayout()
-    layout.itemSize = CGSize(width: self.view.bounds.width, height: cellHeight)
-    layout.minimumLineSpacing = 0
-    
-    let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    cv.register(SettingValueCell.self, forCellWithReuseIdentifier: Constants.Reuse.settingValueCell)
-    cv.backgroundColor = UIColor.cyan
-    cv.translatesAutoresizingMaskIntoConstraints = false
-    
-    cv.dataSource = self
-    cv.delegate = self
-    return cv
+  lazy var photoDownloadManager: PhotoDownloadManager = {
+    let manager = PhotoDownloadManager()
+    manager.delegate = self
+    return manager
+  }()
+  lazy var settingsMenu: SettingsMenu = {
+    let sm = SettingsMenu(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    return sm
   }()
   
-  private var settingsMenuHeight: CGFloat {
-    get {
-      return CGFloat(settingsMenuOptions.count) * cellHeight
-    }
-  }
   
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
@@ -76,7 +56,6 @@ class PostsViewController: UIViewController {
     addSubviews()
     setupProfileButton()
     setupTakePhotoButton()
-    setupSettingsMenu()
   }
   
   // MARK: - View Configuration
@@ -86,6 +65,9 @@ class PostsViewController: UIViewController {
     self.view.addSubview(photoButton)
     self.view.addSubview(blurView)
     self.view.addSubview(settingsMenu)
+    
+    settingsMenu.update()
+    
   }
   
   private func setupTakePhotoButton() {
@@ -102,19 +84,6 @@ class PostsViewController: UIViewController {
     photoButton.addTarget(self, action: #selector(handleTakePhotoTap), for: .touchUpInside)
   }
   
-  private func setupSettingsMenu() {
-    NSLayoutConstraint.activate([
-      settingsMenu.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-      settingsMenu.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-      settingsMenu.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-      settingsMenu.heightAnchor.constraint(equalToConstant: settingsMenuHeight)
-      ])
-    
-    settingsMenu.setNeedsLayout()
-    settingsMenu.layoutIfNeeded()
-    
-    settingsMenu.transform = CGAffineTransform(translationX: 0, y: settingsMenu.bounds.height)
-  }
   
   @objc private func handleTakePhotoTap() {
     present(TakePictureViewController(), animated: true, completion: nil)
@@ -180,16 +149,12 @@ class PostsViewController: UIViewController {
   }
   
   private func showSettingsMenu() {
-    UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-      self.settingsMenu.transform = CGAffineTransform(translationX: 0, y: 0)
-    }, completion: nil)
+    settingsMenu.show()
   }
   
   
   private func hideSettingsMenu() {
-    UIView.animate(withDuration: 0.15) {
-      self.settingsMenu.transform = CGAffineTransform(translationX: 0, y: self.settingsMenu.bounds.height)
-    }
+    settingsMenu.hide()
   }
   
 }
