@@ -9,15 +9,6 @@
 import Foundation
 import CoreLocation
 
-//public final class LocationManager: NSObject, CLLocationManagerDelegate {
-//  public var locationManager: CLLocationManager = {
-//    let manager = CLLocationManager()
-//    manager.desiredAccuracy = kCLLocationAccuracyBest
-//    return manager
-//  }()
-//
-//}
-
 public var locationManager: CLLocationManager = {
     let manager = CLLocationManager()
     manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters

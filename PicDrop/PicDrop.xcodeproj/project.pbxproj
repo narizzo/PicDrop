@@ -7,32 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0107BC6421021FE900F170A7 /* PostsVC+SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */; };
+		0107BC67210225B900F170A7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC66210225B900F170A7 /* Constants.swift */; };
+		0107BC6921026C6600F170A7 /* TinderImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6821026C6600F170A7 /* TinderImageView.swift */; };
+		0107BC6B2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */; };
+		0107BCA72106774900F170A7 /* SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BCA62106774900F170A7 /* SettingsMenu.swift */; };
+		0118117F20FFD7E000CBC258 /* PhotoDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0118117E20FFD7E000CBC258 /* PhotoDownloadManager.swift */; };
+		011811812101008200CBC258 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011811802101008200CBC258 /* Extensions.swift */; };
+		011811842101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */; };
 		01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01285A0420E02BCD002CF548 /* TakePictureViewController.swift */; };
 		0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */; };
 		019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D709E20E0022B0087C21C /* AppDelegate.swift */; };
-		019D70A120E0022B0087C21C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A020E0022B0087C21C /* ViewController.swift */; };
-		019D70A420E0022B0087C21C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 019D70A220E0022B0087C21C /* Main.storyboard */; };
+		019D70A120E0022B0087C21C /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A020E0022B0087C21C /* PostsViewController.swift */; };
 		019D70A720E0022B0087C21C /* PicDrop.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A520E0022B0087C21C /* PicDrop.xcdatamodeld */; };
 		019D70A920E0022C0087C21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 019D70A820E0022C0087C21C /* Assets.xcassets */; };
-		019D70AC20E0022C0087C21C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 019D70AA20E0022C0087C21C /* LaunchScreen.storyboard */; };
 		019D70B420E0037B0087C21C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 019D70B320E0037B0087C21C /* GoogleService-Info.plist */; };
 		01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D6A77520E1695B00A6863B /* SignInViewController.swift */; };
+		01E75C5A20FE63920029B029 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E75C5920FE63920029B029 /* LocationManager.swift */; };
+		01E75C5C20FEC0C10029B029 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01E75C5B20FEC0C10029B029 /* LaunchScreen.storyboard */; };
 		A159AA3339D1F7E6872BEA24 /* Pods_PicDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D83E0FB8C831C46FC0AFC8D /* Pods_PicDrop.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+SettingsMenu.swift"; sourceTree = "<group>"; };
+		0107BC66210225B900F170A7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0107BC6821026C6600F170A7 /* TinderImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinderImageView.swift; sourceTree = "<group>"; };
+		0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+TinderImageViewDelegate.swift"; sourceTree = "<group>"; };
+		0107BCA62106774900F170A7 /* SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMenu.swift; sourceTree = "<group>"; };
+		0118117E20FFD7E000CBC258 /* PhotoDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDownloadManager.swift; sourceTree = "<group>"; };
+		011811802101008200CBC258 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+PhotoDownloadDelegate.swift"; sourceTree = "<group>"; };
 		01285A0420E02BCD002CF548 /* TakePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakePictureViewController.swift; sourceTree = "<group>"; };
 		0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUploadManager.swift; sourceTree = "<group>"; };
 		019D709B20E0022B0087C21C /* PicDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		019D709E20E0022B0087C21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		019D70A020E0022B0087C21C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		019D70A320E0022B0087C21C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		019D70A020E0022B0087C21C /* PostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewController.swift; sourceTree = "<group>"; };
 		019D70A620E0022B0087C21C /* PicDrop.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PicDrop.xcdatamodel; sourceTree = "<group>"; };
 		019D70A820E0022C0087C21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		019D70AB20E0022C0087C21C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		019D70AD20E0022C0087C21C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		019D70B320E0037B0087C21C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		01D6A77520E1695B00A6863B /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		01E75C5920FE63920029B029 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		01E75C5B20FEC0C10029B029 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27CC724ED3416975DD334CA4 /* Pods-PicDrop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicDrop.release.xcconfig"; path = "Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop.release.xcconfig"; sourceTree = "<group>"; };
 		5D83E0FB8C831C46FC0AFC8D /* Pods_PicDrop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PicDrop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A949E2ECB921CE524322BF2 /* Pods-PicDrop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicDrop.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PicDrop/Pods-PicDrop.debug.xcconfig"; sourceTree = "<group>"; };
@@ -50,10 +66,116 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0107BC65210225AF00F170A7 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				0107BC66210225B900F170A7 /* Constants.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		0107BC9C2106759E00F170A7 /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				019D709E20E0022B0087C21C /* AppDelegate.swift */,
+			);
+			path = AppDelegate;
+			sourceTree = "<group>";
+		};
+		0107BC9D210675BA00F170A7 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0107BCA02106761200F170A7 /* SignIn */,
+				0107BC9F210675FD00F170A7 /* Posts */,
+				0107BCA12106761E00F170A7 /* TakePicture */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0107BC9E210675E200F170A7 /* Posts Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */,
+				0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */,
+				0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */,
+			);
+			path = "Posts Extensions";
+			sourceTree = "<group>";
+		};
+		0107BC9F210675FD00F170A7 /* Posts */ = {
+			isa = PBXGroup;
+			children = (
+				019D70A020E0022B0087C21C /* PostsViewController.swift */,
+				0107BC9E210675E200F170A7 /* Posts Extensions */,
+			);
+			path = Posts;
+			sourceTree = "<group>";
+		};
+		0107BCA02106761200F170A7 /* SignIn */ = {
+			isa = PBXGroup;
+			children = (
+				01D6A77520E1695B00A6863B /* SignInViewController.swift */,
+			);
+			path = SignIn;
+			sourceTree = "<group>";
+		};
+		0107BCA12106761E00F170A7 /* TakePicture */ = {
+			isa = PBXGroup;
+			children = (
+				01285A0420E02BCD002CF548 /* TakePictureViewController.swift */,
+			);
+			path = TakePicture;
+			sourceTree = "<group>";
+		};
+		0107BCA22106764000F170A7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				01E75C5B20FEC0C10029B029 /* LaunchScreen.storyboard */,
+				0107BC6821026C6600F170A7 /* TinderImageView.swift */,
+				0107BCA62106774900F170A7 /* SettingsMenu.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		0107BCA32106764800F170A7 /* Singletons */ = {
+			isa = PBXGroup;
+			children = (
+				01E75C5920FE63920029B029 /* LocationManager.swift */,
+			);
+			path = Singletons;
+			sourceTree = "<group>";
+		};
+		0107BCA42106766000F170A7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				019D70A520E0022B0087C21C /* PicDrop.xcdatamodeld */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0107BCA52106767600F170A7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				019D70A820E0022C0087C21C /* Assets.xcassets */,
+				019D70AD20E0022C0087C21C /* Info.plist */,
+				019D70B320E0037B0087C21C /* GoogleService-Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		011811822101008600CBC258 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				011811802101008200CBC258 /* Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		0199A76620FD3C9F00B261F6 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
 				0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */,
+				0118117E20FFD7E000CBC258 /* PhotoDownloadManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -61,7 +183,6 @@
 		019D709220E0022A0087C21C = {
 			isa = PBXGroup;
 			children = (
-				0199A76620FD3C9F00B261F6 /* Networking */,
 				019D709D20E0022B0087C21C /* PicDrop */,
 				019D709C20E0022B0087C21C /* Products */,
 				80829EEB6D64C9C625B852D8 /* Pods */,
@@ -80,16 +201,15 @@
 		019D709D20E0022B0087C21C /* PicDrop */ = {
 			isa = PBXGroup;
 			children = (
-				019D709E20E0022B0087C21C /* AppDelegate.swift */,
-				01D6A77520E1695B00A6863B /* SignInViewController.swift */,
-				019D70A020E0022B0087C21C /* ViewController.swift */,
-				01285A0420E02BCD002CF548 /* TakePictureViewController.swift */,
-				019D70A220E0022B0087C21C /* Main.storyboard */,
-				019D70A820E0022C0087C21C /* Assets.xcassets */,
-				019D70AA20E0022C0087C21C /* LaunchScreen.storyboard */,
-				019D70AD20E0022C0087C21C /* Info.plist */,
-				019D70A520E0022B0087C21C /* PicDrop.xcdatamodeld */,
-				019D70B320E0037B0087C21C /* GoogleService-Info.plist */,
+				0107BC9C2106759E00F170A7 /* AppDelegate */,
+				0107BC9D210675BA00F170A7 /* Controllers */,
+				011811822101008600CBC258 /* Extensions */,
+				0107BCA42106766000F170A7 /* Models */,
+				0199A76620FD3C9F00B261F6 /* Networking */,
+				0107BCA52106767600F170A7 /* Resources */,
+				0107BCA32106764800F170A7 /* Singletons */,
+				0107BC65210225AF00F170A7 /* Utility */,
+				0107BCA22106764000F170A7 /* Views */,
 			);
 			path = PicDrop;
 			sourceTree = "<group>";
@@ -172,10 +292,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				019D70AC20E0022C0087C21C /* LaunchScreen.storyboard in Resources */,
+				01E75C5C20FEC0C10029B029 /* LaunchScreen.storyboard in Resources */,
 				019D70B420E0037B0087C21C /* GoogleService-Info.plist in Resources */,
 				019D70A920E0022C0087C21C /* Assets.xcassets in Resources */,
-				019D70A420E0022B0087C21C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,35 +376,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				019D70A120E0022B0087C21C /* ViewController.swift in Sources */,
+				019D70A120E0022B0087C21C /* PostsViewController.swift in Sources */,
+				011811812101008200CBC258 /* Extensions.swift in Sources */,
 				019D70A720E0022B0087C21C /* PicDrop.xcdatamodeld in Sources */,
+				0118117F20FFD7E000CBC258 /* PhotoDownloadManager.swift in Sources */,
+				011811842101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift in Sources */,
 				01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */,
+				0107BCA72106774900F170A7 /* SettingsMenu.swift in Sources */,
+				0107BC6421021FE900F170A7 /* PostsVC+SettingsMenu.swift in Sources */,
+				01E75C5A20FE63920029B029 /* LocationManager.swift in Sources */,
+				0107BC6B2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift in Sources */,
 				01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */,
 				019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */,
+				0107BC6921026C6600F170A7 /* TinderImageView.swift in Sources */,
 				0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */,
+				0107BC67210225B900F170A7 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		019D70A220E0022B0087C21C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				019D70A320E0022B0087C21C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		019D70AA20E0022C0087C21C /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				019D70AB20E0022C0087C21C /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		019D70AE20E0022C0087C21C /* Debug */ = {
@@ -409,7 +518,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMKUUDGR73;
-				INFOPLIST_FILE = PicDrop/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/PicDrop/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -428,7 +537,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GMKUUDGR73;
-				INFOPLIST_FILE = PicDrop/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/PicDrop/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

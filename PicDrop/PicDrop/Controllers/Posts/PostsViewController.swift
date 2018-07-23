@@ -88,23 +88,6 @@ class PostsViewController: UIViewController {
     self.view.addSubview(settingsMenu)
   }
   
-//  private func setupImageView() {
-//    imageView.translatesAutoresizingMaskIntoConstraints = false
-//
-//    NSLayoutConstraint.activate([
-//      imageView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-//      imageView.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
-//      imageView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-//      imageView.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-//      ])
-//
-//    let tapGestureRecognizer = UITapGestureRecognizer()
-//    tapGestureRecognizer.addTarget(self, action: #selector(toggleHUD))
-//    imageView.addGestureRecognizer(tapGestureRecognizer)
-//    imageView.isUserInteractionEnabled = true
-//    imageView.backgroundColor = UIColor.black
-//  }
-  
   private func setupTakePhotoButton() {
     photoButton.translatesAutoresizingMaskIntoConstraints = false
     
@@ -146,12 +129,8 @@ class PostsViewController: UIViewController {
     for view in views {
       UIView.transition(with: view, duration: duration, options: .transitionCrossDissolve, animations: {
         view.isHidden = hidden
-      }, completion: { (completed) in
-        if let button = view as? UIButton {
-          button.isEnabled = !hidden // a button can't be seen or touched when (hidden == true && isEnabled == false)
-        }
-      })
-    }
+      }, completion: nil
+    )}
   }
   
   private func setupProfileButton() {
