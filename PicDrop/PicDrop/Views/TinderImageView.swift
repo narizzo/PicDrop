@@ -16,7 +16,7 @@ protocol TinderImageViewDelegate: class {
 
 class TinderImageView: UIImageView {
 
-  var delegate: TinderImageViewDelegate?
+  weak var delegate: TinderImageViewDelegate?
   
   override init(frame: CGRect) {
     super.init(frame: frame)

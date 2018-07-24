@@ -30,7 +30,7 @@ class PhotoDownloadManager {
   var keyCollector = [String]()
   
   func getNearbyPosts() {
-    guard let location = locationManager.location else {
+    guard let location = LocationManager.shared.locationManager.location else {
       return
     }
     let geoFire = GeoFire(firebaseRef: dbPostLocationsRef)

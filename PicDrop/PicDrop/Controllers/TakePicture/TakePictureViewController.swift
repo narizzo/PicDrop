@@ -52,12 +52,13 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
       //locationManager.delegate = self
       shootPhoto()
     } else {
-      locationManager.requestWhenInUseAuthorization()
+      LocationManager.shared.locationManager.requestWhenInUseAuthorization()
+      //locationManager.requestWhenInUseAuthorization()
     }
   }
   
   private func shootPhoto() {
-    locationManager.startUpdatingLocation()
+    LocationManager.shared.locationManager.startUpdatingLocation()
     
     if UIImagePickerController.isSourceTypeAvailable(.camera) {
       imagePicker.delegate = self
@@ -85,10 +86,10 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-    locationManager.stopUpdatingLocation()
+    LocationManager.shared.locationManager.stopUpdatingLocation()
     state = .hasPicture
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      guard let location = locationManager.location else {
+      guard let location = LocationManager.shared.locationManager.location else {
         print("Error: Location not valid")
         return
       }

@@ -9,9 +9,24 @@
 import Foundation
 import CoreLocation
 
-public var locationManager: CLLocationManager = {
+
+public class LocationManager {
+  static let shared = LocationManager()
+  
+  private init() {}
+  
+  public var locationManager: CLLocationManager = {
     let manager = CLLocationManager()
     manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     //kCLLocationAccuracyBest
     return manager
   }()
+
+}
+
+//public var locationManager: CLLocationManager = {
+//  let manager = CLLocationManager()
+//  manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+//  //kCLLocationAccuracyBest
+//  return manager
+//}()

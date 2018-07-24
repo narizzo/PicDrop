@@ -15,12 +15,8 @@ import GeoFire
 class PostsViewController: UIViewController {
   
   // MARK: - Instance Variables
-  lazy var tinderImageView: TinderImageView = {
-    let tiv = TinderImageView(frame: .zero)
-    tiv.delegate = self
-    return tiv
-  }()
   
+  /* Private */
   private var isHUDHidden = false
   private let verticalEllipsisButton = UIButton()
   private let photoButton = UIButton()
@@ -31,6 +27,13 @@ class PostsViewController: UIViewController {
     blurView.alpha = 0.0
     blurView.frame = self.view.bounds
     return blurView
+  }()
+  
+  /* Internal */
+  lazy var tinderImageView: TinderImageView = {
+    let tiv = TinderImageView(frame: .zero)
+    tiv.delegate = self
+    return tiv
   }()
   lazy var photoDownloadManager: PhotoDownloadManager = {
     let manager = PhotoDownloadManager()
@@ -46,7 +49,7 @@ class PostsViewController: UIViewController {
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
     toggleHUD()
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+    LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     photoDownloadManager.getNearbyPosts()
   }
   
