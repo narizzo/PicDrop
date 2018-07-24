@@ -9,9 +9,9 @@
 import UIKit
 
 protocol TinderImageViewDelegate: class {
-  func TinderImageViewTapped()
-  func TinderImageViewSwipedLeft()
-  func TinderImageViewSwipedRight()
+  func didTap(on tinderImageView: TinderImageView)
+  func didSwipeLeft(on tinderImageView: TinderImageView)
+  func didSwipeRight(on tinderImageView: TinderImageView)
 }
 
 class TinderImageView: UIImageView {
@@ -68,15 +68,15 @@ class TinderImageView: UIImageView {
   }
   
   @objc private func tapped() {
-    delegate?.TinderImageViewTapped()
+    delegate?.didTap(on: self)
   }
   
   @objc private func swipedLeft() {
-    delegate?.TinderImageViewSwipedLeft()
+    delegate?.didSwipeLeft(on: self)
   }
   
   @objc private func swipedRight() {
-    delegate?.TinderImageViewSwipedRight()
+    delegate?.didSwipeRight(on: self)
   }
   
   func setImage(to photo: UIImage) {

@@ -9,16 +9,16 @@
 import UIKit
 
 extension PostsViewController: TinderImageViewDelegate {
-  func TinderImageViewTapped() {
+  func didTap(on tinderImageView: TinderImageView) {
     toggleHUD()
   }
   
-  func TinderImageViewSwipedLeft() {
+  func didSwipeLeft(on tinderImageView: TinderImageView) {
     photoDownloadManager.downloadNextPost()
     
   }
   
-  func TinderImageViewSwipedRight() {
+  func didSwipeRight(on tinderImageView: TinderImageView) {
     photoDownloadManager.downloadNextPost()
   }
   
