@@ -12,13 +12,21 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
 
   // MARK: - Data
   private let settingsMenuOptions = ["Username", "Email", "Change password", "About", "Logout"]
-
+  
   // MARK: - Instance Variables
   private let cellHeight: CGFloat = 50
-  public var height: CGFloat {
+  public var menuHeight: CGFloat {
     get {
       return CGFloat(settingsMenuOptions.count) * cellHeight
     }
+  }
+  
+  override func didMoveToSuperview() {
+    guard let _ = superview else {
+      return
+    }
+    setFlowLayout()
+    setLayoutConstraints()
   }
   
   // MARK: - Inits
@@ -36,39 +44,31 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
     register(MenuSettingCell.self, forCellWithReuseIdentifier: Constants.Reuse.settingValueCell)
     delegate = self
     dataSource = self
-    
-    backgroundColor = UIColor.white
-    update()
+    //self.backgroundView?.backgroundColor = UIColor.white
+    //backgroundColor = UIColor.white
   }
   
-  public func update() {
-    if let superview = superview {
-      setLayout(with: superview)
-      setConstraints(with: superview)
-    }
-  }
-  
-  private func setLayout(with superview: UIView) {
+  private func setFlowLayout() {
     let layout = UICollectionViewFlowLayout()
-    layout.itemSize = CGSize(width: superview.bounds.width, height: cellHeight)
+    layout.itemSize = CGSize(width: superview!.bounds.width, height: cellHeight)
     layout.minimumLineSpacing = 0
     
     setCollectionViewLayout(layout, animated: false)
   }
   
-  private func setConstraints(with superview: UIView) {
+  private func setLayoutConstraints() {
     translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-      bottomAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.bottomAnchor),
-      rightAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.rightAnchor),
-      leftAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.leftAnchor),
-      heightAnchor.constraint(equalToConstant: height)
+      bottomAnchor.constraint(equalTo: superview!.safeAreaLayoutGuide.bottomAnchor),
+      rightAnchor.constraint(equalTo: superview!.safeAreaLayoutGuide.rightAnchor),
+      leftAnchor.constraint(equalTo: superview!.safeAreaLayoutGuide.leftAnchor),
+      heightAnchor.constraint(equalToConstant: menuHeight)
       ])
     
     setNeedsLayout()
     layoutIfNeeded()
     
-    transform = CGAffineTransform(translationX: 0, y: height)
+    transform = CGAffineTransform(translationX: 0, y: menuHeight)
   }
   
   // MARK: Hide/Show Menu
@@ -80,7 +80,7 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
   
   func hide() {
     UIView.animate(withDuration: 0.15) {
-      self.transform = CGAffineTransform(translationX: 0, y: self.height)
+      self.transform = CGAffineTransform(translationX: 0, y: self.menuHeight)
     }
   }
 
@@ -92,9 +92,10 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.Reuse.settingValueCell, for: indexPath)
     if let cell = cell as? MenuSettingCell {
-      cell.setText(to: settingsMenuOptions[indexPath.row]) // will repeat options for sections -> Collapse menu into 1 section?
+      cell.configureLabelWith(text: settingsMenuOptions[indexPath.row],
+                              textColor: UIColor.white,
+                              backgroundColor: UIColor.black)
     }
-    cell.backgroundColor = UIColor.red
     return cell
   }
 

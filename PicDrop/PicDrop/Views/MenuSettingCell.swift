@@ -11,12 +11,27 @@ import UIKit
 class MenuSettingCell: UICollectionViewCell {
   
   private let label = UIInsetLabel()
+  var text: String? {
+    didSet {
+      label.text = text
+    }
+  }
+  var textColor: UIColor? {
+    didSet {
+      label.textColor = textColor
+    }
+  }
+  var labelBackgroundColor: UIColor? {
+    didSet {
+      label.backgroundColor = labelBackgroundColor
+    }
+  }
   
   override init(frame: CGRect) {
     super.init(frame: frame)
     
     label.adjustsFontSizeToFitWidth = true
-    
+    //self.addSubview(label)
     self.contentView.addSubview(label)
     
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -33,8 +48,10 @@ class MenuSettingCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
   
-  func setText(to text: String) {
-    label.text = text
+  func configureLabelWith(text: String, textColor: UIColor, backgroundColor: UIColor) {
+    self.text = text
+    self.textColor = textColor
+    self.labelBackgroundColor = backgroundColor
   }
   
 }
@@ -43,7 +60,7 @@ class MenuSettingCell: UICollectionViewCell {
 class UIInsetLabel: UILabel {
   
   override func drawText(in rect: CGRect) {
-    let insets = UIEdgeInsets.init(top: 0, left: 5, bottom: 0, right: 5)
+    let insets = UIEdgeInsets.init(top: 0, left: 8, bottom: 0, right: 8)
     super.drawText(in: UIEdgeInsetsInsetRect(rect, insets))
   }
   

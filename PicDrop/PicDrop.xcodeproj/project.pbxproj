@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0107BC6421021FE900F170A7 /* PostsVC+SettingsMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */; };
 		0107BC67210225B900F170A7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC66210225B900F170A7 /* Constants.swift */; };
 		0107BC6921026C6600F170A7 /* TinderImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6821026C6600F170A7 /* TinderImageView.swift */; };
 		0107BC6B2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */; };
@@ -30,7 +29,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+SettingsMenu.swift"; sourceTree = "<group>"; };
 		0107BC66210225B900F170A7 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		0107BC6821026C6600F170A7 /* TinderImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TinderImageView.swift; sourceTree = "<group>"; };
 		0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+TinderImageViewDelegate.swift"; sourceTree = "<group>"; };
@@ -99,7 +97,6 @@
 			children = (
 				011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */,
 				0107BC6A2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift */,
-				0107BC6321021FE900F170A7 /* PostsVC+SettingsMenu.swift */,
 			);
 			path = "Posts Extensions";
 			sourceTree = "<group>";
@@ -387,7 +384,6 @@
 				011811842101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift in Sources */,
 				01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */,
 				0107BCA72106774900F170A7 /* SettingsMenu.swift in Sources */,
-				0107BC6421021FE900F170A7 /* PostsVC+SettingsMenu.swift in Sources */,
 				01E75C5A20FE63920029B029 /* LocationManager.swift in Sources */,
 				0107BC6B2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift in Sources */,
 				01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */,

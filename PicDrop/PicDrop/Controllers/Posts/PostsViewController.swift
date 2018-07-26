@@ -68,9 +68,6 @@ class PostsViewController: UIViewController {
     self.view.addSubview(photoButton)
     self.view.addSubview(blurView)
     self.view.addSubview(settingsMenu)
-    
-    settingsMenu.update()
-    
   }
   
   private func setupTakePhotoButton() {
