@@ -126,9 +126,3 @@ class PhotoDownloadManager {
     }
   }
 }
-
-
-public enum PictureVote: Int {
-  case dislike = -1
-  case like = 1
-}

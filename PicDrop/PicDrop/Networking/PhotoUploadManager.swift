@@ -51,24 +51,13 @@ class PhotoUploadManager {
     let values: [String: Any] = ["download_URL": downloadURL,
                                  "posted_by": uid,
                                  "likes": 1,
-                                 "dislikes": 0]
+                                 "dislikes": 0,
+                                 "date": Date().description]
     dbRef.updateChildValues(values)
   }
   
   // MARK: - GeoFire
   private func saveLocationDataForPhoto(with uidString: String, location: CLLocation) {
-    /*
-     ...what happens to DispatchQueues when a view controller is deallocated?
-     
-     Those queues will continue to exist, as will any dispatched blocks, until
-        (a) all dispatched blocks finish; and
-        (b) there are no more strong references to the queue.
-     
-     So if you asynchronously dispatch blocks with weak references to self (i.e. the view controller),
-     they will continue to run after the view controller is released.
-     This is why it's critical to not use unowned in this context.
-     
-     */
     DispatchQueue.global(qos: .background).async {
       let dbRef = Database.database().reference().child("post_locations")
       let geoFire = GeoFire(firebaseRef: dbRef)
@@ -80,6 +69,18 @@ class PhotoUploadManager {
         }
       }
     }
+    /*
+     ...what happens to DispatchQueues when a view controller is deallocated?
+     
+     Those queues will continue to exist, as will any dispatched blocks, until
+     (a) all dispatched blocks finish; and
+     (b) there are no more strong references to the queue.
+     
+     So if you asynchronously dispatch blocks with weak references to self (i.e. the view controller),
+     they will continue to run after the view controller is released.
+     This is why it's critical to not use unowned in this context.
+     
+     */
   }
   
 }
