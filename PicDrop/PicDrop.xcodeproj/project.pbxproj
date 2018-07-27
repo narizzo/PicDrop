@@ -16,6 +16,7 @@
 		011811812101008200CBC258 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011811802101008200CBC258 /* Extensions.swift */; };
 		011811842101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */; };
 		01285A0520E02BCD002CF548 /* TakePictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01285A0420E02BCD002CF548 /* TakePictureViewController.swift */; };
+		017A9F9E210A73AB0010396E /* PhotoUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017A9F9D210A73AB0010396E /* PhotoUpdateManager.swift */; };
 		0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */; };
 		019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D709E20E0022B0087C21C /* AppDelegate.swift */; };
 		019D70A120E0022B0087C21C /* PostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019D70A020E0022B0087C21C /* PostsViewController.swift */; };
@@ -38,6 +39,7 @@
 		011811802101008200CBC258 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		011811832101296C00CBC258 /* PostsVC+PhotoDownloadDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PostsVC+PhotoDownloadDelegate.swift"; sourceTree = "<group>"; };
 		01285A0420E02BCD002CF548 /* TakePictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TakePictureViewController.swift; sourceTree = "<group>"; };
+		017A9F9D210A73AB0010396E /* PhotoUpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUpdateManager.swift; sourceTree = "<group>"; };
 		0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoUploadManager.swift; sourceTree = "<group>"; };
 		019D709B20E0022B0087C21C /* PicDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		019D709E20E0022B0087C21C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 			children = (
 				0199A76720FD3CB900B261F6 /* PhotoUploadManager.swift */,
 				0118117E20FFD7E000CBC258 /* PhotoDownloadManager.swift */,
+				017A9F9D210A73AB0010396E /* PhotoUpdateManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				01E75C5A20FE63920029B029 /* LocationManager.swift in Sources */,
 				0107BC6B2102706A00F170A7 /* PostsVC+TinderImageViewDelegate.swift in Sources */,
 				01D6A77620E1695B00A6863B /* SignInViewController.swift in Sources */,
+				017A9F9E210A73AB0010396E /* PhotoUpdateManager.swift in Sources */,
 				019D709F20E0022B0087C21C /* AppDelegate.swift in Sources */,
 				0107BC6921026C6600F170A7 /* TinderImageView.swift in Sources */,
 				0199A76820FD3CB900B261F6 /* PhotoUploadManager.swift in Sources */,

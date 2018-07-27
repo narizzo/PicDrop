@@ -11,17 +11,17 @@ import UIKit
 class MenuSettingCell: UICollectionViewCell {
   
   private let label = UIInsetLabel()
-  var text: String? {
+  private var text: String? {
     didSet {
       label.text = text
     }
   }
-  var textColor: UIColor? {
+  private var textColor: UIColor? {
     didSet {
       label.textColor = textColor
     }
   }
-  var labelBackgroundColor: UIColor? {
+  private var labelBackgroundColor: UIColor? {
     didSet {
       label.backgroundColor = labelBackgroundColor
     }
@@ -31,9 +31,17 @@ class MenuSettingCell: UICollectionViewCell {
     super.init(frame: frame)
     
     label.adjustsFontSizeToFitWidth = true
-    //self.addSubview(label)
+    //self.addSubview(label) // Do not directly add subviews to the cell itself.
     self.contentView.addSubview(label)
-    
+    setupGestureRecognizers()
+    setupLayoutConstraints()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+  private func setupLayoutConstraints() {
     label.translatesAutoresizingMaskIntoConstraints = false
     
     NSLayoutConstraint.activate([
@@ -44,14 +52,20 @@ class MenuSettingCell: UICollectionViewCell {
       ])
   }
   
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
   func configureLabelWith(text: String, textColor: UIColor, backgroundColor: UIColor) {
     self.text = text
     self.textColor = textColor
     self.labelBackgroundColor = backgroundColor
+  }
+  
+  private func setupGestureRecognizers() {
+    let tapGestureRecognizer = UITapGestureRecognizer()
+    tapGestureRecognizer.addTarget(self, action: #selector(handleTap))
+    contentView.addGestureRecognizer(tapGestureRecognizer)
+  }
+  
+  @objc private func handleTap() {
+    print("Cell tapped")
   }
   
 }

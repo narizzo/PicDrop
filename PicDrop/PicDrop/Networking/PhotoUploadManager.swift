@@ -48,7 +48,10 @@ class PhotoUploadManager {
     }
     let dbRef = Database.database().reference().child("posts").child(uidString)
     let downloadURL = url
-    let values: [String: String] = ["download_URL": downloadURL, "posted_by": uid]
+    let values: [String: Any] = ["download_URL": downloadURL,
+                                 "posted_by": uid,
+                                 "likes": 1,
+                                 "dislikes": 0]
     dbRef.updateChildValues(values)
   }
   
@@ -73,7 +76,7 @@ class PhotoUploadManager {
         if let error = error {
           print(error)
         } else {
-          print("Successfully saved post location to GeoFire")
+          print("Successfully saved post location to Firebase")
         }
       }
     }

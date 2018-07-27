@@ -17,9 +17,21 @@ class PostsViewController: UIViewController {
   // MARK: - Instance Variables
   
   /* Private */
-  private var isHUDHidden = false
-  private let verticalEllipsisButton = UIButton()
-  private let photoButton = UIButton()
+  private var isHUDHidden = true {
+    didSet {
+      setViews(hidden: isHUDHidden, duration: 0.2, views: verticalEllipsisButton, photoButton)
+    }
+  }
+  private lazy var verticalEllipsisButton: UIButton = {
+    let veb = UIButton()
+    veb.isHidden = isHUDHidden
+    return veb
+  }()
+  private lazy var photoButton: UIButton = {
+    let pb = UIButton()
+    pb.isHidden = isHUDHidden
+    return pb
+  }()
   
   private lazy var blurView: UIVisualEffectView = {
     let blur = UIBlurEffect(style: UIBlurEffectStyle.dark)
@@ -48,15 +60,15 @@ class PostsViewController: UIViewController {
   
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
-    toggleHUD()
     LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     photoDownloadManager.getNearbyPosts()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    view.backgroundColor = UIColor.red
     addSubviews()
+    setupTapRecognizer()
     setupProfileButton()
     setupTakePhotoButton()
   }
@@ -68,6 +80,12 @@ class PostsViewController: UIViewController {
     self.view.addSubview(photoButton)
     self.view.addSubview(blurView)
     self.view.addSubview(settingsMenu)
+  }
+  
+  private func setupTapRecognizer() {
+    let tapGestureRecognizer = UITapGestureRecognizer()
+    tapGestureRecognizer.addTarget(self, action: #selector(toggleHUD))
+    view.addGestureRecognizer(tapGestureRecognizer)
   }
   
   private func setupTakePhotoButton() {
@@ -91,7 +109,6 @@ class PostsViewController: UIViewController {
   
   @objc func toggleHUD() {
     isHUDHidden = !isHUDHidden
-    setViews(hidden: isHUDHidden, duration: 0.2, views: verticalEllipsisButton, photoButton)
   }
   
   private func setViews(hidden: Bool, duration: TimeInterval, views: UIView...) {

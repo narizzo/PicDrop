@@ -14,6 +14,7 @@ import GeoFire
 
 protocol PhotoDownloadDelegate: class {
   func photoHasFinishedDownloading(_: UIImage)
+  func noPhotosToShow()
 }
 
 class PhotoDownloadManager {
@@ -22,10 +23,17 @@ class PhotoDownloadManager {
   
   private let storage = Storage.storage()
   private var data = Data()
-  
+  private lazy var userRef: DatabaseReference? = {
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return nil
+    }
+    let ref = Database.database().reference().child("users").child(uid)
+    return ref
+  }()
   private let dbPostLocationsRef = Database.database().reference().child("post_locations")
   private let dbPostsRef = Database.database().reference().child("posts")
   private let storageRef = Storage.storage().reference().child("photos")
+  
   
   var keyCollector = [String]()
   
@@ -52,11 +60,47 @@ class PhotoDownloadManager {
     }
   }
   
-  func downloadNextPost() {
+  func voteOnPost(with vote: PictureVote) {
+    print("Voted \(vote.rawValue)")
+    defer { downloadNextPost() }
     guard let postID = keyCollector.first else {
       return
     }
-    self.keyCollector.removeFirst()
+    
+//    let dislikesRef = dbPostsRef.child(postID).child("dislikes")
+//    dislikesRef.runTransactionBlock { (data) -> TransactionResult in
+//      if let value = data.value as? Int {
+//        data.value = value + vote.rawValue
+//      }
+//      return TransactionResult.success(withValue: data)
+//
+//    }
+//
+    let dislikesRef = dbPostsRef.child(postID).child("dislikes")
+    dislikesRef.runTransactionBlock({ (data) -> TransactionResult in
+      if let value = data.value as? Int {
+        data.value = value + vote.rawValue
+      }
+      return TransactionResult.success(withValue: data)
+    }) { (error, completion, snapshot) in
+      print(error?.localizedDescription)
+      self.updateUserVotes(for: postID, with: vote)
+    }
+  }
+  
+  private func updateUserVotes(for postID: String, with vote: PictureVote) {
+    guard let userRef = userRef else {
+      return
+    }
+    userRef.child("posts_voted_on").child(postID).setValue(vote.rawValue)
+  }
+  
+  func downloadNextPost() {
+    guard let postID = keyCollector.first else {
+      self.delegate?.noPhotosToShow()
+      return
+    }
+    //self.keyCollector.removeFirst()
     
     dbPostsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
       if let downloadURL = snapshot.value as? String {
@@ -81,4 +125,10 @@ class PhotoDownloadManager {
       print("Error: \(error)")
     }
   }
+}
+
+
+public enum PictureVote: Int {
+  case dislike = -1
+  case like = 1
 }

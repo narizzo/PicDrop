@@ -14,11 +14,14 @@ extension PostsViewController: TinderImageViewDelegate {
   }
   
   func didSwipeLeft(on tinderImageView: TinderImageView) {
+    //photoUpdateManager.dislikePost()
+    photoDownloadManager.voteOnPost(with: .dislike)
     photoDownloadManager.downloadNextPost()
     
   }
   
   func didSwipeRight(on tinderImageView: TinderImageView) {
+    //photoUpdateManager.dislikePost()
     photoDownloadManager.downloadNextPost()
   }
   

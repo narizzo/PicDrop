@@ -44,8 +44,6 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
     register(MenuSettingCell.self, forCellWithReuseIdentifier: Constants.Reuse.settingValueCell)
     delegate = self
     dataSource = self
-    //self.backgroundView?.backgroundColor = UIColor.white
-    //backgroundColor = UIColor.white
   }
   
   private func setFlowLayout() {

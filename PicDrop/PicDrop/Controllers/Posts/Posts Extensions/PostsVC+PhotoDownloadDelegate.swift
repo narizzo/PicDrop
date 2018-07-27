@@ -17,4 +17,8 @@ extension PostsViewController: PhotoDownloadDelegate {
     }
   }
   
+  func noPhotosToShow() {
+    print("No Photos")
+  }
+  
 }
