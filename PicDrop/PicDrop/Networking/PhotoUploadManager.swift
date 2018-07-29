@@ -12,7 +12,7 @@ import FirebaseStorage
 import FirebaseDatabase
 import GeoFire
 
-class PhotoUploadManager {
+class PhotoManager {
   
   // MARK: - Photo Storage
   func upload(photo: UIImage, location: CLLocation) {

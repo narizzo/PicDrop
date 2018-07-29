@@ -18,7 +18,7 @@ extension PostsViewController: PhotoDownloadDelegate {
   }
   
   func noPhotosToShow() {
-    print("No Photos")
+    tinderImageView.showNoPhotosImage()
   }
   
 }

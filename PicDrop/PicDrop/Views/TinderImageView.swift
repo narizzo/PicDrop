@@ -9,7 +9,6 @@
 import UIKit
 
 protocol TinderImageViewDelegate: class {
-  //func didTap(on tinderImageView: TinderImageView)
   func didSwipeLeft(on tinderImageView: TinderImageView)
   func didSwipeRight(on tinderImageView: TinderImageView)
 }
@@ -49,11 +48,6 @@ class TinderImageView: UIImageView {
   }
   
   private func setupGestureRecognizers() {
-//    // tap
-//    let tapRecognizer = UITapGestureRecognizer()
-//    tapRecognizer.addTarget(self, action: #selector(tapped))
-//    addGestureRecognizer(tapRecognizer)
-    
     // swipe left
     let swipeLeftRecognizer = UISwipeGestureRecognizer()
     swipeLeftRecognizer.addTarget(self, action: #selector(swipedLeft))
@@ -67,10 +61,6 @@ class TinderImageView: UIImageView {
     addGestureRecognizer(swipeRightRecognizer)
   }
   
-//  @objc private func tapped() {
-//    delegate?.didTap(on: self)
-//  }
-  
   @objc private func swipedLeft() {
     delegate?.didSwipeLeft(on: self)
   }
@@ -81,6 +71,12 @@ class TinderImageView: UIImageView {
   
   func setImage(to photo: UIImage) {
     image = photo
+  }
+  
+  func showNoPhotosImage() {
+    if let photo = UIImage(named: "NoPhoto") {
+      setImage(to: photo)
+    }
   }
   
 }

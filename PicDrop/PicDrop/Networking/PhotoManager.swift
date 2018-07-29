@@ -1,8 +1,8 @@
 //
-//  PhotoDownloadManager.swift
+//  PhotoUploadManager.swift
 //  PicDrop
 //
-//  Created by Nicholas Rizzo on 7/18/18.
+//  Created by Nicholas Rizzo on 7/16/18.
 //  Copyright © 2018 Nicholas Rizzo. All rights reserved.
 //
 
@@ -17,7 +17,7 @@ protocol PhotoDownloadDelegate: class {
   func noPhotosToShow()
 }
 
-class PhotoDownloadManager {
+class PhotoManager {
   
   weak var delegate: PhotoDownloadDelegate?
   
@@ -34,7 +34,65 @@ class PhotoDownloadManager {
   private let dbPostsRef = Database.database().reference().child("posts")
   private let storageRef = Storage.storage().reference().child("photos")
   
+  // MARK: - Upload
+  // storage
+  func upload(photo: UIImage, location: CLLocation) {
+    guard let imageData = UIImageJPEGRepresentation(photo, 0.1) else {
+      return
+    }
+    let uidString = NSUUID().uuidString
+    let storageRef = Storage.storage().reference().child("photos").child("\(uidString).jpg")
+    
+    // async upload to firebase
+    // * SHOULD UPDATE THIS TO USE 'putFile' IN ORDER TO PREVENT SITUATIONS WHERE APP IS EXITED BEFORE UPLOAD COMPLETES * //
+    storageRef.putData(imageData, metadata: nil, completion: { (_, error) in
+      guard error == nil else {
+        print("error: \(error!.localizedDescription)")
+        return
+      }
+      
+      storageRef.downloadURL(completion: { (url, error) in
+        guard error == nil,
+          let url = url else {
+            return
+        }
+        self.saveDownloadURLForPhoto(with: uidString, url: url.absoluteString)
+        self.saveLocationDataForPhoto(with: uidString, location: location)
+      })
+    })
+  }
   
+  // database
+  private func saveDownloadURLForPhoto(with uidString: String, url: String) {
+    guard let uid = Auth.auth().currentUser?.uid else {
+      return
+    }
+    let dbRef = Database.database().reference().child("posts").child(uidString)
+    let downloadURL = url
+    let values: [String: Any] = ["download_URL": downloadURL,
+                                 "posted_by": uid,
+                                 "likes": 1,
+                                 "dislikes": 0,
+                                 "date": Date().description]
+    dbRef.updateChildValues(values)
+  }
+  
+  // geoFire
+  private func saveLocationDataForPhoto(with uidString: String, location: CLLocation) {
+    DispatchQueue.global(qos: .background).async {
+      let dbRef = Database.database().reference().child("post_locations")
+      let geoFire = GeoFire(firebaseRef: dbRef)
+      geoFire.setLocation(location, forKey: uidString) { (error) in
+        if let error = error {
+          print(error)
+        } else {
+          print("Successfully saved post location to Firebase")
+        }
+      }
+    }
+  }
+  
+  // MARK: - Download
   var keyCollector = [String]()
   
   func getNearbyPosts() {
@@ -61,21 +119,11 @@ class PhotoDownloadManager {
   }
   
   func voteOnPost(with vote: PictureVote) {
-    print("Voted \(vote.rawValue)")
     defer { downloadNextPost() }
     guard let postID = keyCollector.first else {
       return
     }
     
-//    let dislikesRef = dbPostsRef.child(postID).child("dislikes")
-//    dislikesRef.runTransactionBlock { (data) -> TransactionResult in
-//      if let value = data.value as? Int {
-//        data.value = value + vote.rawValue
-//      }
-//      return TransactionResult.success(withValue: data)
-//
-//    }
-//
     let dislikesRef = dbPostsRef.child(postID).child("dislikes")
     dislikesRef.runTransactionBlock({ (data) -> TransactionResult in
       if let value = data.value as? Int {
@@ -83,7 +131,9 @@ class PhotoDownloadManager {
       }
       return TransactionResult.success(withValue: data)
     }) { (error, completion, snapshot) in
-      print(error?.localizedDescription)
+      if let error = error {
+        print(error)
+      }
       self.updateUserVotes(for: postID, with: vote)
     }
   }

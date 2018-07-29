@@ -10,23 +10,38 @@ import Foundation
 import CoreLocation
 
 
-public class LocationManager {
+public final class LocationManager {
   static let shared = LocationManager()
   
   private init() {}
   
-  public var locationManager: CLLocationManager = {
+  var locationManager: CLLocationManager = {
     let manager = CLLocationManager()
     manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    //kCLLocationAccuracyBest
+    manager.activityType = .other
+    //manager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistance, timeout: TimeInterval)
     return manager
   }()
+  
+  // use observable instead of method calls to update accuracy?
+  public func setAccuracyForFindingPhotos() {
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+  }
+  
+  public func setAccuracyForPostingPhotos() {
+    locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+  }
+  
+//  public func resumeLocationUpdates() {
+//    locationManager.startUpdatingLocation()
+//  }
+//
+//  public func pauseLocationUpdates() {
+//    locationManager.stopUpdatingLocation()
+//  }
+//
+//  public func requestWhenInUseAuthorization() {
+//    locationManager.requestWhenInUseAuthorization()
+//  }
 
 }
-
-//public var locationManager: CLLocationManager = {
-//  let manager = CLLocationManager()
-//  manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//  //kCLLocationAccuracyBest
-//  return manager
-//}()

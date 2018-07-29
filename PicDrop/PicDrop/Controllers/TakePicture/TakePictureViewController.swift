@@ -18,19 +18,14 @@ fileprivate enum State {
   case canceled
 }
 
-class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  
-//  private var locationManager: CLLocationManager = {
-//    let manager = CLLocationManager()
-//    manager.desiredAccuracy = kCLLocationAccuracyBest
-//    return manager
-//  }()
+class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
   private var imagePicker = UIImagePickerController()
   private var state: State = State.needsPicture
-  private let photoUploadManager = PhotoUploadManager()
+  private let photoManager = PhotoManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    LocationManager.shared.locationManager.delegate = self
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -53,7 +48,12 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
       shootPhoto()
     } else {
       LocationManager.shared.locationManager.requestWhenInUseAuthorization()
-      //locationManager.requestWhenInUseAuthorization()
+    }
+  }
+  
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    if status == .authorizedWhenInUse {
+      shootPhoto()
     }
   }
   
@@ -93,7 +93,7 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
         print("Error: Location not valid")
         return
       }
-      photoUploadManager.upload(photo: image, location: location)
+      photoManager.upload(photo: image, location: location)
     }
     dismiss(animated: true, completion: nil)
   }

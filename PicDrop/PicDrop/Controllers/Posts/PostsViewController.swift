@@ -47,8 +47,8 @@ class PostsViewController: UIViewController {
     tiv.delegate = self
     return tiv
   }()
-  lazy var photoDownloadManager: PhotoDownloadManager = {
-    let manager = PhotoDownloadManager()
+  lazy var photoManager: PhotoManager = {
+    let manager = PhotoManager()
     manager.delegate = self
     return manager
   }()
@@ -61,7 +61,7 @@ class PostsViewController: UIViewController {
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
     LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    photoDownloadManager.getNearbyPosts()
+    photoManager.getNearbyPosts()
   }
   
   override func viewDidLoad() {
