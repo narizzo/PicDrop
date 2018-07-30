@@ -57,16 +57,19 @@ class PostsViewController: UIViewController {
     return sm
   }()
   
+  override var prefersStatusBarHidden: Bool {
+    return true
+  }
   
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
     LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     photoManager.getNearbyPosts()
+    
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = UIColor.red
     addSubviews()
     setupTapRecognizer()
     setupProfileButton()

@@ -17,6 +17,10 @@ class TinderImageView: UIImageView {
 
   weak var delegate: TinderImageViewDelegate?
   
+  override func didMoveToSuperview() {
+    layout()
+  }
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     setup()
@@ -30,13 +34,12 @@ class TinderImageView: UIImageView {
     backgroundColor = UIColor.black
     isUserInteractionEnabled = true
     isOpaque = true
-    
-    layout()
+    translatesAutoresizingMaskIntoConstraints = false
+    contentMode = .scaleAspectFill
     setupGestureRecognizers()
   }
   
   private func layout() {
-    translatesAutoresizingMaskIntoConstraints = false
     if let superview = superview {
       NSLayoutConstraint.activate([
         topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor),
@@ -48,24 +51,78 @@ class TinderImageView: UIImageView {
   }
   
   private func setupGestureRecognizers() {
-    // swipe left
-    let swipeLeftRecognizer = UISwipeGestureRecognizer()
-    swipeLeftRecognizer.addTarget(self, action: #selector(swipedLeft))
-    swipeLeftRecognizer.direction = .left
-    addGestureRecognizer(swipeLeftRecognizer)
-    
-    // swipe right
-    let swipeRightRecognizer = UISwipeGestureRecognizer()
-    swipeRightRecognizer.addTarget(self, action: #selector(swipedRight))
-    swipeRightRecognizer.direction = .right
-    addGestureRecognizer(swipeRightRecognizer)
+    addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
   }
   
-  @objc private func swipedLeft() {
+  @objc private func handlePan(gesture: UIPanGestureRecognizer) {
+    let location = gesture.translation(in: self)
+    switch gesture.state {
+    case .began:
+      beganTouching(at: location)
+      return
+    case .changed:
+      isTouching(at: location)
+      return
+    case .ended:
+      stoppedTouching()
+      return
+    default:
+      return
+    }
+  }
+  
+  private func beganTouching(at location: CGPoint) {
+    layer.shouldRasterize = true
+    
+    UIView.animate(withDuration: 0.1) {
+      self.alpha = 0.5
+    }
+  }
+  
+  private func isTouching(at location: CGPoint) {
+    transform = CGAffineTransform.init(translationX: location.x, y: 0)
+    if abs(location.x) > (0.35 * self.bounds.width) {
+      didVote(with: location.x)
+    }
+  }
+  
+  private func stoppedTouching() {
+    layer.shouldRasterize = false
+    
+    UIView.animate(withDuration: 0.1) {
+      self.alpha = 1
+      self.transform = CGAffineTransform.identity
+    }
+  }
+  
+  private enum Direction: CGFloat {
+    case right = 1.0
+    case left = -1.0
+  }
+  
+  private func didVote(with location: CGFloat) {
+    if location > 0 {
+      swipedRight()
+      animatePhoto(.right)
+    } else {
+      swipedLeft()
+      animatePhoto(.left)
+    }
+  }
+  
+  private func animatePhoto(_ direction: Direction) {
+    UIView.animate(withDuration: 0.2, animations: {
+      self.transform = CGAffineTransform.init(translationX: direction.rawValue * 100.0, y: 0)
+    }) { (_) in
+      print("Load new image")
+    }
+  }
+  
+  private func swipedLeft() {
     delegate?.didSwipeLeft(on: self)
   }
   
-  @objc private func swipedRight() {
+  private func swipedRight() {
     delegate?.didSwipeRight(on: self)
   }
   
