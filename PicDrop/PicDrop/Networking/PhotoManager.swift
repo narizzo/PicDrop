@@ -93,7 +93,7 @@ class PhotoManager {
   }
   
   // MARK: - Download
-  var keyCollector = [String]()
+  private var keyCollector = [String]()
   
   func getNearbyPosts() {
     guard let location = LocationManager.shared.locationManager.location else {
