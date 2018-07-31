@@ -42,20 +42,16 @@ class PostsViewController: UIViewController {
   }()
   
   /* Internal */
-  lazy var tinderImageView: TinderImageView = {
-    let tiv = TinderImageView(frame: .zero)
+  lazy var tinderImageViewManager: TinderImageViewManager = {
+    let tiv = TinderImageViewManager()
     tiv.delegate = self
     return tiv
-  }()
-  lazy var photoManager: PhotoManager = {
-    let manager = PhotoManager()
-    manager.delegate = self
-    return manager
   }()
   lazy var settingsMenu: SettingsMenu = {
     let sm = SettingsMenu(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     return sm
   }()
+  var postQueue = PostQueue()
   
   override var prefersStatusBarHidden: Bool {
     return true
@@ -64,7 +60,7 @@ class PostsViewController: UIViewController {
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
     LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    photoManager.getNearbyPosts()
+    NetworkClient.shared.getNearbyPosts()
     
   }
   
@@ -78,7 +74,7 @@ class PostsViewController: UIViewController {
   
   // MARK: - View Configuration
   private func addSubviews() {
-    self.view.addSubview(tinderImageView)
+    self.view.addSubview(tinderImageViewManager)
     self.view.addSubview(verticalEllipsisButton)
     self.view.addSubview(photoButton)
     self.view.addSubview(blurView)

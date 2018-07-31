@@ -8,13 +8,13 @@
 
 import UIKit
 
-extension PostsViewController: TinderImageViewDelegate {
-  func didSwipeLeft(on tinderImageView: TinderImageView) {
-    photoManager.voteOnPost(with: .dislike)
+extension PostsViewController: TinderImageViewManagerDelegate {
+  func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote) {
+    NetworkClient.shared.vote(on: postQueue.popFirstPost(), with: vote)
   }
   
-  func didSwipeRight(on tinderImageView: TinderImageView) {
-    photoManager.voteOnPost(with: .like)
+  func requestNextImage(_ tinderImageViewManager: TinderImageViewManager) -> UIImage? {
+    return UIImage()
   }
   
   

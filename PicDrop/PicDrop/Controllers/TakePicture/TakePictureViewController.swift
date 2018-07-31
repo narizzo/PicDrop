@@ -21,7 +21,6 @@ fileprivate enum State {
 class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
   private var imagePicker = UIImagePickerController()
   private var state: State = State.needsPicture
-  private let photoManager = PhotoManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -93,7 +92,8 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
         print("Error: Location not valid")
         return
       }
-      photoManager.upload(photo: image, location: location)
+      //NetworkClient.upload()
+      //photoManager.upload(photo: image, location: location)
     }
     dismiss(animated: true, completion: nil)
   }

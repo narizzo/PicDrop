@@ -13,26 +13,20 @@ import FirebaseDatabase
 import GeoFire
 
 protocol PhotoDownloadDelegate: class {
-  func photoHasFinishedDownloading(_: UIImage)
-  func noPhotosToShow()
+  func photoHasFinishedDownloading(_: UIImage?)
 }
 
-class PhotoManager {
+final class NetworkClient {
+  
+  static let shared = NetworkClient()
+  
+  private init() {}
   
   weak var delegate: PhotoDownloadDelegate?
   
   private let storage = Storage.storage()
   private var data = Data()
-  private lazy var userRef: DatabaseReference? = {
-    guard let uid = Auth.auth().currentUser?.uid else {
-      return nil
-    }
-    let ref = Database.database().reference().child("users").child(uid)
-    return ref
-  }()
-  private let dbPostLocationsRef = Database.database().reference().child("post_locations")
-  private let dbPostsRef = Database.database().reference().child("posts")
-  private let storageRef = Storage.storage().reference().child("photos")
+  
   
   // MARK: - Upload
   // storage
@@ -63,7 +57,7 @@ class PhotoManager {
   }
   
   // database
-  private func saveDownloadURLForPhoto(with uidString: String, url: String) {
+  func saveDownloadURLForPhoto(with uidString: String, url: String) {
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
@@ -78,7 +72,7 @@ class PhotoManager {
   }
   
   // geoFire
-  private func saveLocationDataForPhoto(with uidString: String, location: CLLocation) {
+  func saveLocationDataForPhoto(with uidString: String, location: CLLocation) {
     DispatchQueue.global(qos: .background).async {
       let dbRef = Database.database().reference().child("post_locations")
       let geoFire = GeoFire(firebaseRef: dbRef)
@@ -99,7 +93,7 @@ class PhotoManager {
     guard let location = LocationManager.shared.locationManager.location else {
       return
     }
-    let geoFire = GeoFire(firebaseRef: dbPostLocationsRef)
+    let geoFire = GeoFire(firebaseRef: Constants.Firebase.Database.postLocationsRef)
     
     let circleQuery = geoFire.query(at: location, withRadius: 0.1)
     
@@ -118,13 +112,13 @@ class PhotoManager {
     }
   }
   
-  func voteOnPost(with vote: PictureVote) {
+  func vote(on post: Post?, with vote: PostVote) {
     defer { downloadNextPost() }
     guard let postID = keyCollector.first else {
       return
     }
     
-    let dislikesRef = dbPostsRef.child(postID).child("dislikes")
+    let dislikesRef = Constants.Firebase.Database.postsRef.child(postID).child("dislikes")
     dislikesRef.runTransactionBlock({ (data) -> TransactionResult in
       if let value = data.value as? Int {
         data.value = value + vote.rawValue
@@ -134,12 +128,13 @@ class PhotoManager {
       if let error = error {
         print(error)
       }
-      self.updateUserVotes(for: postID, with: vote)
+      self.updateUserVotes(for: post, with: vote)
     }
   }
   
-  private func updateUserVotes(for postID: String, with vote: PictureVote) {
-    guard let userRef = userRef else {
+  private func updateUserVotes(for post: Post?, with vote: PostVote) {
+    guard let userRef = Constants.Firebase.Auth.userRef,
+      let postID = post?.id else {
       return
     }
     userRef.child("posts_voted_on").child(postID).setValue(vote.rawValue)
@@ -147,12 +142,12 @@ class PhotoManager {
   
   func downloadNextPost() {
     guard let postID = keyCollector.first else {
-      self.delegate?.noPhotosToShow()
+      delegate?.photoHasFinishedDownloading(nil)
       return
     }
     //self.keyCollector.removeFirst()
     
-    dbPostsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
+    Constants.Firebase.Database.postsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
       if let downloadURL = snapshot.value as? String {
         let image = self.storage.reference(forURL: downloadURL)
         image.getData(maxSize: 1 * 2436 * 1125, completion: { (data, error) in

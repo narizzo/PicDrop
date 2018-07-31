@@ -9,16 +9,16 @@
 import UIKit
 
 protocol TinderImageViewDelegate: class {
-  func didSwipeLeft(on tinderImageView: TinderImageView)
-  func didSwipeRight(on tinderImageView: TinderImageView)
+  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote)
 }
 
 class TinderImageView: UIImageView {
 
   weak var delegate: TinderImageViewDelegate?
   
-  override func didMoveToSuperview() {
-    layout()
+  init() {
+    super.init(frame: .zero)
+    setup()
   }
   
   override init(frame: CGRect) {
@@ -30,17 +30,14 @@ class TinderImageView: UIImageView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  private func setup() {
-    backgroundColor = UIColor.black
-    isUserInteractionEnabled = true
-    isOpaque = true
-    translatesAutoresizingMaskIntoConstraints = false
-    contentMode = .scaleAspectFill
-    setupGestureRecognizers()
+  override func didMoveToSuperview() {
+    setLayoutConstraints()
+    setNeedsLayout()
   }
   
-  private func layout() {
+  private func setLayoutConstraints() {
     if let superview = superview {
+      translatesAutoresizingMaskIntoConstraints = false
       NSLayoutConstraint.activate([
         topAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.topAnchor),
         rightAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.rightAnchor),
@@ -48,6 +45,14 @@ class TinderImageView: UIImageView {
         leftAnchor.constraint(equalTo: superview.safeAreaLayoutGuide.leftAnchor),
         ])
     }
+  }
+  
+  private func setup() {
+    backgroundColor = UIColor.black
+    isUserInteractionEnabled = true
+    isOpaque = true
+    contentMode = .scaleAspectFill
+    setupGestureRecognizers()
   }
   
   private func setupGestureRecognizers() {
@@ -95,45 +100,27 @@ class TinderImageView: UIImageView {
     }
   }
   
-  private enum Direction: CGFloat {
-    case right = 1.0
-    case left = -1.0
-  }
   
   private func didVote(with location: CGFloat) {
     if location > 0 {
-      swipedRight()
-      animatePhoto(.right)
+      delegate?.tinderImageView(self, didVote: .upvote)
+      animatePhoto(.upvote)
     } else {
-      swipedLeft()
-      animatePhoto(.left)
+      delegate?.tinderImageView(self, didVote: .downvote)
+      animatePhoto(.downvote)
     }
   }
   
-  private func animatePhoto(_ direction: Direction) {
+  private func animatePhoto(_ vote: PostVote) {
     UIView.animate(withDuration: 0.2, animations: {
-      self.transform = CGAffineTransform.init(translationX: direction.rawValue * 100.0, y: 0)
+      self.transform = CGAffineTransform.init(translationX: CGFloat(vote.rawValue) * 100.0, y: 0)
     }) { (_) in
       print("Load new image")
     }
   }
   
-  private func swipedLeft() {
-    delegate?.didSwipeLeft(on: self)
-  }
-  
-  private func swipedRight() {
-    delegate?.didSwipeRight(on: self)
-  }
-  
   func setImage(to photo: UIImage) {
     image = photo
-  }
-  
-  func showNoPhotosImage() {
-    if let photo = UIImage(named: "NoPhoto") {
-      setImage(to: photo)
-    }
   }
   
 }

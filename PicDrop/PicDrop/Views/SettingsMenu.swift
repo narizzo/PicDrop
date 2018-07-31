@@ -41,7 +41,7 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
   
   // MARK: - Setup
   private func setup() {
-    register(MenuSettingCell.self, forCellWithReuseIdentifier: Constants.Reuse.settingValueCell)
+    register(MenuSettingCell.self, forCellWithReuseIdentifier: Constants.CellReuse.settingValueCell)
     delegate = self
     dataSource = self
   }
@@ -88,7 +88,7 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.Reuse.settingValueCell, for: indexPath)
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.CellReuse.settingValueCell, for: indexPath)
     if let cell = cell as? MenuSettingCell {
       cell.configureLabelWith(text: settingsMenuOptions[indexPath.row],
                               textColor: UIColor.white,

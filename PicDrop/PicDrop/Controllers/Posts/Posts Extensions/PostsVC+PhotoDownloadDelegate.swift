@@ -11,14 +11,8 @@ import UIKit
 // MARK: - PhotoDownloadDelegate
 extension PostsViewController: PhotoDownloadDelegate {
   
-  func photoHasFinishedDownloading(_ photo: UIImage) {
-    DispatchQueue.main.async {
-      self.tinderImageView.setImage(to: photo)
-    }
-  }
-  
-  func noPhotosToShow() {
-    tinderImageView.showNoPhotosImage()
+  func photoHasFinishedDownloading(_ photo: UIImage?) {
+    self.tinderImageViewManager.setBackViewImage(to: photo)
   }
   
 }
