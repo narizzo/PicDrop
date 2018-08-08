@@ -11,33 +11,28 @@ import FirebaseAuth
 import FirebaseStorage
 import FirebaseDatabase
 import GeoFire
+import CoreData
 
-protocol PhotoDownloadDelegate: class {
-  func photoHasFinishedDownloading(_: UIImage?)
-}
-
-final class NetworkClient {
+final class NetworkManager { // subclass NSObject if using KVO
   
-  static let shared = NetworkClient()
+  // MARK: - Internal
+  private var cache: Cache
   
-  private init() {}
-  
-  weak var delegate: PhotoDownloadDelegate?
-  
-  private let storage = Storage.storage()
-  private var data = Data()
-  
-  
+  // MARK: - Init
+  init(cache: Cache) {
+    self.cache = cache
+  }
   // MARK: - Upload
   // storage
-  func upload(photo: UIImage, location: CLLocation) {
+  func uploadPhotoToStorage(photo: UIImage, location: CLLocation) {
     guard let imageData = UIImageJPEGRepresentation(photo, 0.1) else {
       return
     }
+    // Firebase storage doesn't have childByAutoID
     let uidString = NSUUID().uuidString
-    let storageRef = Storage.storage().reference().child("photos").child("\(uidString).jpg")
+    //let storageRef = Storage.storage().reference().child("photos").child("\(uidString).jpg")
+    let storageRef = Constants.Firebase.Storage.storagePhotosRef.child("\(uidString).jpg")
     
-    // async upload to firebase
     // * SHOULD UPDATE THIS TO USE 'putFile' IN ORDER TO PREVENT SITUATIONS WHERE APP IS EXITED BEFORE UPLOAD COMPLETES * //
     storageRef.putData(imageData, metadata: nil, completion: { (_, error) in
       guard error == nil else {
@@ -50,29 +45,30 @@ final class NetworkClient {
           let url = url else {
             return
         }
-        self.saveDownloadURLForPhoto(with: uidString, url: url.absoluteString)
-        self.saveLocationDataForPhoto(with: uidString, location: location)
+        self.storePhotoMetadataInDatabase(with: uidString, url: url.absoluteString)
+        self.saveLocationDataForPhoto(with: uidString, at: location)
       })
     })
   }
   
   // database
-  func saveDownloadURLForPhoto(with uidString: String, url: String) {
+  func storePhotoMetadataInDatabase(with uidString: String, url: String) {
     guard let uid = Auth.auth().currentUser?.uid else {
       return
     }
-    let dbRef = Database.database().reference().child("posts").child(uidString)
+    //let dbRef = Database.database().reference().child("posts").child(uidString)
+    let dbRef = Constants.Firebase.Database.postsRef.child(uidString)
     let downloadURL = url
     let values: [String: Any] = ["download_URL": downloadURL,
                                  "posted_by": uid,
-                                 "likes": 1,
-                                 "dislikes": 0,
+                                 "upvotes": 1,
+                                 "downvotes": 0,
                                  "date": Date().description]
     dbRef.updateChildValues(values)
   }
   
   // geoFire
-  func saveLocationDataForPhoto(with uidString: String, location: CLLocation) {
+  func saveLocationDataForPhoto(with uidString: String, at location: CLLocation) {
     DispatchQueue.global(qos: .background).async {
       let dbRef = Database.database().reference().child("post_locations")
       let geoFire = GeoFire(firebaseRef: dbRef)
@@ -87,38 +83,31 @@ final class NetworkClient {
   }
   
   // MARK: - Download
-  private var keyCollector = [String]()
-  
-  func getNearbyPosts() {
-    guard let location = LocationManager.shared.locationManager.location else {
-      return
-    }
+  func fetchPosts(near location: CLLocation) {
+    var nearbyPostKeysCollector = [String]()
+    
     let geoFire = GeoFire(firebaseRef: Constants.Firebase.Database.postLocationsRef)
-    
     let circleQuery = geoFire.query(at: location, withRadius: 0.1)
-    
     let dispatchQueue = DispatchQueue.global(qos: .userInitiated)
+    
     dispatchQueue.async {
       let _ = circleQuery.observe(.keyEntered) { (key: String?, _: CLLocation?) in
         if let key = key {
-          self.keyCollector.append(key)
+          nearbyPostKeysCollector.append(key)
         }
       }
     }
-    
     circleQuery.observeReady {
       circleQuery.removeAllObservers()
-      self.downloadNextPost()
+      self.cache.process(nearbyPostKeysCollector)
     }
   }
   
-  func vote(on post: Post?, with vote: PostVote) {
-    defer { downloadNextPost() }
-    guard let postID = keyCollector.first else {
-      return
-    }
-    
-    let dislikesRef = Constants.Firebase.Database.postsRef.child(postID).child("dislikes")
+  func vote(on postID: String, with vote: PostVote) {
+    let voteString: String
+    vote.rawValue == 1 ? (voteString = "upvote") : (voteString = "downvote")
+
+    let dislikesRef = Constants.Firebase.Database.postsRef.child(postID).child(voteString)
     dislikesRef.runTransactionBlock({ (data) -> TransactionResult in
       if let value = data.value as? Int {
         data.value = value + vote.rawValue
@@ -128,28 +117,21 @@ final class NetworkClient {
       if let error = error {
         print(error)
       }
-      self.updateUserVotes(for: post, with: vote)
+      self.updateUserVotes(for: postID, with: vote)
     }
   }
   
-  private func updateUserVotes(for post: Post?, with vote: PostVote) {
-    guard let userRef = Constants.Firebase.Auth.userRef,
-      let postID = post?.id else {
+  private func updateUserVotes(for postID: String, with vote: PostVote) {
+    guard let userRef = Constants.Firebase.Auth.userRef else {
       return
     }
     userRef.child("posts_voted_on").child(postID).setValue(vote.rawValue)
   }
   
-  func downloadNextPost() {
-    guard let postID = keyCollector.first else {
-      delegate?.photoHasFinishedDownloading(nil)
-      return
-    }
-    //self.keyCollector.removeFirst()
-    
+  func downloadPhoto(for postID: String) {
     Constants.Firebase.Database.postsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
       if let downloadURL = snapshot.value as? String {
-        let image = self.storage.reference(forURL: downloadURL)
+        let image = Constants.Firebase.Storage.storageRef.reference(forURL: downloadURL)
         image.getData(maxSize: 1 * 2436 * 1125, completion: { (data, error) in
           guard error == nil else {
             print(error!.localizedDescription)
@@ -161,7 +143,8 @@ final class NetworkClient {
           }
           
           if let photo = UIImage(data: imageData) {
-            self.delegate?.photoHasFinishedDownloading(photo)
+            //self.delegate?.networkClient(self, didFinishDownloading: Photo(id: postID, image: photo))
+            /* pass data to cache */
           }
         })
       }
@@ -170,4 +153,38 @@ final class NetworkClient {
       print("Error: \(error)")
     }
   }
+  
+//  func downloadNextPost() {
+//    guard let postID = keyCollector.first else {
+//      //delegate?.photoHasFinishedDownloading(nil)
+//      return
+//    }
+//    //self.keyCollector.removeFirst()
+//
+//    Constants.Firebase.Database.postsRef.child(postID).child("download_URL").observeSingleEvent(of: .value, with: { (snapshot) in
+//      if let downloadURL = snapshot.value as? String {
+//        let image = Constants.Firebase.Storage.storageRef.reference(forURL: downloadURL)
+//        image.getData(maxSize: 1 * 2436 * 1125, completion: { (data, error) in
+//          guard error == nil else {
+//            print(error!.localizedDescription)
+//            return
+//          }
+//
+//          guard let imageData = data else {
+//            return
+//          }
+//
+//          if let photo = UIImage(data: imageData) {
+//            //self.delegate?.photoHasFinishedDownloading(photo)
+//
+//          }
+//        })
+//      }
+//
+//    }) { (error) in
+//      print("Error: \(error)")
+//    }
+//  }
+  
+  
 }

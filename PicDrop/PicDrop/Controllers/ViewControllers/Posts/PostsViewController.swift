@@ -14,7 +14,19 @@ import GeoFire
 
 class PostsViewController: UIViewController {
   
-  // MARK: - Instance Variables
+  // MARK: - Internal
+  /* Public */
+  var networkManager: NetworkManager!
+  var locationManager: LocationManager!
+  let notificationCenter = NotificationCenter.default
+  var posts = [Post]() {
+    didSet {
+      print("********")
+      posts.forEach { (post) in
+        print(post.uuid)
+      }
+    }
+  }
   
   /* Private */
   private var isHUDHidden = true {
@@ -22,6 +34,10 @@ class PostsViewController: UIViewController {
       setViews(hidden: isHUDHidden, duration: 0.2, views: verticalEllipsisButton, photoButton)
     }
   }
+  private lazy var reloadButton: UIButton = {
+    let rb = UIButton()
+    return rb
+  }()
   private lazy var verticalEllipsisButton: UIButton = {
     let veb = UIButton()
     veb.isHidden = isHUDHidden
@@ -51,7 +67,6 @@ class PostsViewController: UIViewController {
     let sm = SettingsMenu(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     return sm
   }()
-  var postQueue = PostQueue()
   
   override var prefersStatusBarHidden: Bool {
     return true
@@ -59,17 +74,45 @@ class PostsViewController: UIViewController {
   
   // MARK: - ViewController Methods
   override func viewDidAppear(_ animated: Bool) {
-    LocationManager.shared.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    NetworkClient.shared.getNearbyPosts()
-    
+    locationManager.setAccuracyForFindingPhotos()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    addObservers()
+    fetchData()
+    
     addSubviews()
     setupTapRecognizer()
     setupProfileButton()
     setupTakePhotoButton()
+    setupReloadButton()
+  }
+  
+  // MARK: - Observers
+  private func addObservers() {
+    notificationCenter.addObserver(self, selector: #selector(self.handleNearbyPosts(_:)), name: Constants.NotificationName.nearbyPostsName, object: nil)
+  }
+  
+  @objc private func handleNearbyPosts(_ notification: NSNotification) {
+    guard let nearbyPosts = notification.userInfo?["nearbyPosts"] as? NearbyPosts else {
+      return
+    }
+    guard let postsArray = nearbyPosts.posts?.array else {
+      return
+    }
+    
+    if let posts = postsArray as? [Post] {
+      self.posts = posts
+    }
+  }
+  
+  // MARK: - Fetch Data
+  @objc private func fetchData() {
+    if let location = locationManager.location {
+      networkManager.fetchPosts(near: location)
+    }
   }
   
   // MARK: - View Configuration
@@ -77,6 +120,7 @@ class PostsViewController: UIViewController {
     self.view.addSubview(tinderImageViewManager)
     self.view.addSubview(verticalEllipsisButton)
     self.view.addSubview(photoButton)
+    self.view.addSubview(reloadButton)
     self.view.addSubview(blurView)
     self.view.addSubview(settingsMenu)
   }
@@ -132,6 +176,19 @@ class PostsViewController: UIViewController {
     verticalEllipsisButton.addTarget(self, action: #selector(handleVerticalEllipsisTap), for: .touchUpInside)
   }
   
+  private func setupReloadButton() {
+    reloadButton.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      reloadButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+      reloadButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
+      reloadButton.heightAnchor.constraint(equalToConstant: 80),
+      reloadButton.widthAnchor.constraint(equalToConstant: 80),
+      ])
+    
+    reloadButton.backgroundColor = UIColor.orange
+    reloadButton.addTarget(self, action: #selector(fetchData), for: .touchUpInside)
+  }
+  
   // MARK: - HUD Methods
   @objc private func handleVerticalEllipsisTap() {
     showBlurView()
@@ -167,7 +224,6 @@ class PostsViewController: UIViewController {
   private func showSettingsMenu() {
     settingsMenu.show()
   }
-  
   
   private func hideSettingsMenu() {
     settingsMenu.hide()

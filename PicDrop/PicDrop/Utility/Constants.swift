@@ -14,10 +14,26 @@ import GeoFire
 
 enum Constants {
   
+  // MARK: - Cell Reuse
   enum CellReuse {
     static let settingValueCell = "settingValueCellReuse"
   }
   
+  // MARK: - Core Data
+  enum CoreData {
+    static let modelName = "PicDrop"
+  }
+  
+  enum Cache {
+    static let cacheName = "nearbyPostsCache"
+  }
+  
+  // MARK: - Local Files
+  enum FileSystem {
+    static let previouslyVotedPostsFileName = "previouslyVotedPostsFileName"
+  }
+  
+  // MARK: - Networking
   enum Firebase {
     
     enum Auth {
@@ -36,8 +52,14 @@ enum Constants {
     }
     
     enum Storage {
-      static let storageRef = FirebaseStorage.Storage.storage().reference().child("photos")
+      static let storageRef = FirebaseStorage.Storage.storage()
+      static let storagePhotosRef = storageRef.reference().child("photos")
     }
+  }
+  
+  // MARK: - KVO Notification
+  enum NotificationName {
+    static let nearbyPostsName = Notification.Name("com.adriftingup.nearbyPosts")
   }
   
 }

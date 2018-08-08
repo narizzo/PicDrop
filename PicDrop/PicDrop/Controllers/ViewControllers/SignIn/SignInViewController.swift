@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import CoreLocation
 import FirebaseAuth
 //import GoogleSignIn
 
 class SignInViewController: UIViewController {
+  
+  // MARK: - Injection
+  var networkManager: NetworkManager?
+  var locationManager: LocationManager?
+  var coreDataStack: CoreDataStack?
   
   private var picDropLabel = UILabel()
   private var signInErrorLabel = UILabel()

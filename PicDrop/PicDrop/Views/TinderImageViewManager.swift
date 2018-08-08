@@ -10,7 +10,6 @@ import UIKit
 
 protocol TinderImageViewManagerDelegate: class {
   func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote)
-  func requestNextImage(_ tinderImageViewManager: TinderImageViewManager) -> UIImage?
 }
 
 class TinderImageViewManager: UIView {
@@ -61,8 +60,6 @@ class TinderImageViewManager: UIView {
       return
     }
     self.bringSubview(toFront: backView)
-    
-    setBackViewImage(to: delegate?.requestNextImage(self))
   }
   
   func setBackViewImage(to photo: UIImage?) {

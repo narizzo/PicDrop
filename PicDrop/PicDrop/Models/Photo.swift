@@ -1,14 +1,14 @@
 //
-//  Post.swift
+//  Photo.swift
 //  PicDrop
 //
-//  Created by Nicholas Rizzo on 7/31/18.
+//  Created by Nicholas Rizzo on 8/1/18.
 //  Copyright © 2018 Nicholas Rizzo. All rights reserved.
 //
 
 import UIKit
 
-struct Post {
+struct Photo {
   var id: String
   var image: UIImage
   

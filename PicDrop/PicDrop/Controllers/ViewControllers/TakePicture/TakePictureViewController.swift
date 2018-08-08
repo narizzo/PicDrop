@@ -19,12 +19,14 @@ fileprivate enum State {
 }
 
 class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
+  
   private var imagePicker = UIImagePickerController()
   private var state: State = State.needsPicture
+  var locationManager: LocationManager?
+  var networkManager: NetworkManager?
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    LocationManager.shared.locationManager.delegate = self
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -46,18 +48,19 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
       //locationManager.delegate = self
       shootPhoto()
     } else {
-      LocationManager.shared.locationManager.requestWhenInUseAuthorization()
+      locationManager?.requestWhenInUseAuthorization()
     }
   }
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
     if status == .authorizedWhenInUse {
-      shootPhoto()
+      verifyPhotoAuth()
     }
   }
   
   private func shootPhoto() {
-    LocationManager.shared.locationManager.startUpdatingLocation()
+    locationManager?.setAccuracyForPostingPhotos()
+    locationManager?.startUpdatingLocation()
     
     if UIImagePickerController.isSourceTypeAvailable(.camera) {
       imagePicker.delegate = self
@@ -73,7 +76,9 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   func alertUserNoCamera() {
     let alertVC = UIAlertController(title: "No Camera", message: "This device does not have a camera", preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+    let okAction = UIAlertAction(title: "OK", style: .default) { alertAction in
+      self.dismiss(animated: true, completion: nil)
+    }
     alertVC.addAction(okAction)
     present(alertVC, animated: true, completion: nil)
   }
@@ -85,15 +90,15 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-    LocationManager.shared.locationManager.stopUpdatingLocation()
+    //LocationManager.shared.locationManager.stopUpdatingLocation()
+    locationManager?.stopUpdatingLocation()
     state = .hasPicture
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      guard let location = LocationManager.shared.locationManager.location else {
+      guard let location = locationManager?.location else {
         print("Error: Location not valid")
         return
       }
-      //NetworkClient.upload()
-      //photoManager.upload(photo: image, location: location)
+      networkManager?.uploadPhotoToStorage(photo: image, location: location)
     }
     dismiss(animated: true, completion: nil)
   }

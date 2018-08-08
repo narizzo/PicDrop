@@ -10,12 +10,10 @@ import UIKit
 
 extension PostsViewController: TinderImageViewManagerDelegate {
   func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote) {
-    NetworkClient.shared.vote(on: postQueue.popFirstPost(), with: vote)
+    /*  1. pop post from postQueue if it exists
+        2. update post's votes in database
+        3. remove corresponding photo from photo queue
+     */
   }
-  
-  func requestNextImage(_ tinderImageViewManager: TinderImageViewManager) -> UIImage? {
-    return UIImage()
-  }
-  
   
 }

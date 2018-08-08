@@ -6,26 +6,42 @@
 //  Copyright © 2018 Nicholas Rizzo. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
-class PostQueue {
-  
-  private var queue = [Post]()
-  
-  func getNextPost() -> Post? {
+struct PostQueue {
+
+  private var queue = [String]()
+//  {
+//    didSet {
+//      NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.postQueueName.rawValue), object: nil, userInfo: ["posts": queue])
+//    }
+//  }
+
+  func peekNextPost() -> String? {
     return queue.first
   }
-  
-  func addPostToQueue(_ post: Post) {
+
+  mutating func addPostToQueue(_ post: String) {
     queue.append(post)
   }
-  
-  func popFirstPost() -> Post? {
+
+  mutating func popFirstPost() -> String? {
     guard queue.count > 0 else {
       return nil
     }
     return queue.removeFirst()
-    
+
     // can't call queue.popFirst() to optionally return Post for some reason...
   }
+  
+  mutating func append(_ posts: [String]) {
+    let newPosts = filterOutPreviouslySeen(posts)
+    queue.append(contentsOf: newPosts)
+  }
+  
+  // Doesn't actually do anything yet
+  mutating func filterOutPreviouslySeen(_ posts: [String]) -> [String] {
+    return posts
+  }
+  
 }
