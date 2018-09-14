@@ -9,11 +9,17 @@
 import UIKit
 
 protocol TinderImageViewDelegate: class {
-  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote)
+  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote, for photo: Photo)
 }
 
 class TinderImageView: UIImageView {
 
+  var photo: Photo? {
+    didSet {
+      self.image = photo?.image
+    }
+  }
+  
   weak var delegate: TinderImageViewDelegate?
   
   init() {
@@ -101,12 +107,16 @@ class TinderImageView: UIImageView {
   }
   
   
-  private func didVote(with location: CGFloat) {
-    if location > 0 {
-      delegate?.tinderImageView(self, didVote: .upvote)
+  private func didVote(with touchLocationX: CGFloat) {
+    guard let photo = photo else {
+      return
+    }
+    
+    if touchLocationX > 0 {
+      delegate?.tinderImageView(self, didVote: .upvote, for: photo)
       animatePhoto(.upvote)
     } else {
-      delegate?.tinderImageView(self, didVote: .downvote)
+      delegate?.tinderImageView(self, didVote: .downvote, for: photo)
       animatePhoto(.downvote)
     }
   }
@@ -117,10 +127,6 @@ class TinderImageView: UIImageView {
     }) { (_) in
       print("Load new image")
     }
-  }
-  
-  func setImage(to photo: UIImage) {
-    image = photo
   }
   
 }

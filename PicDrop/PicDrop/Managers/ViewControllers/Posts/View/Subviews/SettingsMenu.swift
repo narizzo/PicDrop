@@ -32,6 +32,7 @@ class SettingsMenu: UICollectionView, UICollectionViewDataSource, UICollectionVi
   // MARK: - Inits
   override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
     super.init(frame: frame, collectionViewLayout: layout)
+    // [Assert] negative or zero item sizes are not supported in the flow layout
     setup()
   }
   

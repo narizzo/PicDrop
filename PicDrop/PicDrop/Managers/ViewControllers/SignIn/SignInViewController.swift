@@ -14,9 +14,7 @@ import FirebaseAuth
 class SignInViewController: UIViewController {
   
   // MARK: - Injection
-  var networkManager: NetworkManager?
-  var locationManager: LocationManager?
-  var coreDataStack: CoreDataStack?
+  private var networkManager: NetworkManager
   
   private var picDropLabel = UILabel()
   private var signInErrorLabel = UILabel()
@@ -30,6 +28,18 @@ class SignInViewController: UIViewController {
   private var skipSignInButton = UIButton()
   private var forgotCredentialsButton = UIButton()
   
+  // MARK: - Init
+  init(networkManager: NetworkManager) {
+    self.networkManager = networkManager
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    networkManager = NetworkManager()
+    super.init(coder: aDecoder)
+  }
+  
+  // MARK: - LifeCycle
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -247,7 +257,7 @@ class SignInViewController: UIViewController {
   }
   
   func showPostsViewController() {
-    let seePostsVC = PostsViewController()
+    let seePostsVC = PostsViewController(networkManager: networkManager)
     present(seePostsVC, animated: true, completion: nil)
   }
   

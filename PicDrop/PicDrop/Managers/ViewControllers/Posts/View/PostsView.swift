@@ -1,43 +1,35 @@
 //
-//  ViewController.swift
+//  PostsView.swift
 //  PicDrop
 //
-//  Created by Nicholas Rizzo on 6/24/18.
+//  Created by Nicholas Rizzo on 8/12/18.
 //  Copyright © 2018 Nicholas Rizzo. All rights reserved.
 //
 
 import UIKit
-import FirebaseDatabase
-import FirebaseStorage
-import FirebaseAuth
-import GeoFire
 
-class PostsViewController: UIViewController {
+protocol PostsViewDelegate: class {
+  func postsView(_ postsView: PostsView, didTapTakePicture: Bool)
+}
+
+class PostsView: UIView {
+
+  // MARK: - Injection
+  weak var delegate: PostsViewDelegate?
   
-  // MARK: - Internal
+  // MARK: - Instance Variables
   /* Public */
-  var networkManager: NetworkManager!
-  var locationManager: LocationManager!
-  let notificationCenter = NotificationCenter.default
-  var posts = [Post]() {
-    didSet {
-      print("********")
-      posts.forEach { (post) in
-        print(post.uuid)
-      }
-    }
-  }
-  
+  lazy var tinderImageViewManager: TinderImageViewManager = {
+    let tiv = TinderImageViewManager()
+    //tiv.delegate = self
+    return tiv
+  }()
   /* Private */
   private var isHUDHidden = true {
     didSet {
       setViews(hidden: isHUDHidden, duration: 0.2, views: verticalEllipsisButton, photoButton)
     }
   }
-  private lazy var reloadButton: UIButton = {
-    let rb = UIButton()
-    return rb
-  }()
   private lazy var verticalEllipsisButton: UIButton = {
     let veb = UIButton()
     veb.isHidden = isHUDHidden
@@ -53,90 +45,70 @@ class PostsViewController: UIViewController {
     let blur = UIBlurEffect(style: UIBlurEffectStyle.dark)
     let blurView = UIVisualEffectView(effect: blur)
     blurView.alpha = 0.0
-    blurView.frame = self.view.bounds
+    blurView.frame = bounds
     return blurView
   }()
-  
-  /* Internal */
-  lazy var tinderImageViewManager: TinderImageViewManager = {
-    let tiv = TinderImageViewManager()
-    tiv.delegate = self
-    return tiv
-  }()
-  lazy var settingsMenu: SettingsMenu = {
+  private lazy var settingsMenu: SettingsMenu = {
     let sm = SettingsMenu(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     return sm
   }()
   
-  override var prefersStatusBarHidden: Bool {
-    return true
+  // MARK: - Init
+  init() {
+    super.init(frame: .zero)
+    setup()
   }
   
-  // MARK: - ViewController Methods
-  override func viewDidAppear(_ animated: Bool) {
-    locationManager.setAccuracyForFindingPhotos()
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    setup()
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    addObservers()
-    fetchData()
-    
+  private func setup() {
+    setupView()
     addSubviews()
     setupTapRecognizer()
     setupProfileButton()
     setupTakePhotoButton()
-    setupReloadButton()
-  }
-  
-  // MARK: - Observers
-  private func addObservers() {
-    notificationCenter.addObserver(self, selector: #selector(self.handleNearbyPosts(_:)), name: Constants.NotificationName.nearbyPostsName, object: nil)
-  }
-  
-  @objc private func handleNearbyPosts(_ notification: NSNotification) {
-    guard let nearbyPosts = notification.userInfo?["nearbyPosts"] as? NearbyPosts else {
-      return
-    }
-    guard let postsArray = nearbyPosts.posts?.array else {
-      return
-    }
-    
-    if let posts = postsArray as? [Post] {
-      self.posts = posts
-    }
-  }
-  
-  // MARK: - Fetch Data
-  @objc private func fetchData() {
-    if let location = locationManager.location {
-      networkManager.fetchPosts(near: location)
-    }
   }
   
   // MARK: - View Configuration
+  private func setupView() {
+    translatesAutoresizingMaskIntoConstraints = false
+    
+    guard let window = window else {
+      return
+    }
+    
+    NSLayoutConstraint.activate([
+      self.topAnchor.constraint(equalTo: window.safeAreaLayoutGuide.topAnchor),
+      self.rightAnchor.constraint(equalTo: window.safeAreaLayoutGuide.rightAnchor),
+      self.bottomAnchor.constraint(equalTo: window.safeAreaLayoutGuide.bottomAnchor),
+      self.leftAnchor.constraint(equalTo: window.safeAreaLayoutGuide.leftAnchor),
+      ])
+    setNeedsLayout()
+  }
+  
   private func addSubviews() {
-    self.view.addSubview(tinderImageViewManager)
-    self.view.addSubview(verticalEllipsisButton)
-    self.view.addSubview(photoButton)
-    self.view.addSubview(reloadButton)
-    self.view.addSubview(blurView)
-    self.view.addSubview(settingsMenu)
+    //addSubview(tinderImageViewManager.view)
+    addSubview(verticalEllipsisButton)
+    addSubview(photoButton)
+    addSubview(blurView)
+    addSubview(settingsMenu)
   }
   
   private func setupTapRecognizer() {
     let tapGestureRecognizer = UITapGestureRecognizer()
     tapGestureRecognizer.addTarget(self, action: #selector(toggleHUD))
-    view.addGestureRecognizer(tapGestureRecognizer)
+    addGestureRecognizer(tapGestureRecognizer)
   }
   
   private func setupTakePhotoButton() {
     photoButton.translatesAutoresizingMaskIntoConstraints = false
     
     NSLayoutConstraint.activate([
-      photoButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-      photoButton.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
+      photoButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+      photoButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
       photoButton.heightAnchor.constraint(equalToConstant: 80),
       photoButton.widthAnchor.constraint(equalToConstant: 80),
       ])
@@ -147,7 +119,7 @@ class PostsViewController: UIViewController {
   
   
   @objc private func handleTakePhotoTap() {
-    present(TakePictureViewController(), animated: true, completion: nil)
+    delegate?.postsView(self, didTapTakePicture: true)
   }
   
   @objc func toggleHUD() {
@@ -159,34 +131,21 @@ class PostsViewController: UIViewController {
       UIView.transition(with: view, duration: duration, options: .transitionCrossDissolve, animations: {
         view.isHidden = hidden
       }, completion: nil
-    )}
+      )}
   }
   
   private func setupProfileButton() {
     verticalEllipsisButton.translatesAutoresizingMaskIntoConstraints = false
     
     NSLayoutConstraint.activate([
-      verticalEllipsisButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-      verticalEllipsisButton.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor),
+      verticalEllipsisButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+      verticalEllipsisButton.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
       verticalEllipsisButton.heightAnchor.constraint(equalToConstant: 80),
       verticalEllipsisButton.widthAnchor.constraint(equalToConstant: 80),
       ])
     
     verticalEllipsisButton.backgroundColor = UIColor.blue
     verticalEllipsisButton.addTarget(self, action: #selector(handleVerticalEllipsisTap), for: .touchUpInside)
-  }
-  
-  private func setupReloadButton() {
-    reloadButton.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      reloadButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-      reloadButton.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor),
-      reloadButton.heightAnchor.constraint(equalToConstant: 80),
-      reloadButton.widthAnchor.constraint(equalToConstant: 80),
-      ])
-    
-    reloadButton.backgroundColor = UIColor.orange
-    reloadButton.addTarget(self, action: #selector(fetchData), for: .touchUpInside)
   }
   
   // MARK: - HUD Methods
@@ -196,14 +155,10 @@ class PostsViewController: UIViewController {
   }
   
   private func showBlurView() {
-    /* show blurView */
-    
-    // add tap dismissal to blurView
     let tapGesture = UITapGestureRecognizer()
     tapGesture.addTarget(self, action: #selector(dismissBlurViewAndSettingsMenu))
     blurView.addGestureRecognizer(tapGesture)
     
-    // animate blur
     UIView.animate(withDuration: 0.2) {
       self.blurView.alpha = 0.8
     }
@@ -228,5 +183,5 @@ class PostsViewController: UIViewController {
   private func hideSettingsMenu() {
     settingsMenu.hide()
   }
-  
+
 }

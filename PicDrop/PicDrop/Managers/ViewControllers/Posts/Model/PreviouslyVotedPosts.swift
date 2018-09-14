@@ -10,7 +10,7 @@ import UIKit
 
 class PreviouslyVotedPosts: NSObject, Codable {
   
-  private var votedPosts = [UUID]()
+  private var previouslyVotedPosts = Set<UUID>()
 
   override init() {
     super.init()
@@ -32,7 +32,7 @@ class PreviouslyVotedPosts: NSObject, Codable {
     if let data = try? Data(contentsOf: path) {
       let decoder = PropertyListDecoder()
       do {
-        votedPosts = try decoder.decode([UUID].self, from: data)
+        previouslyVotedPosts = try decoder.decode(Set<UUID>.self, from: data)
       } catch let error as NSError {
         print("\(error): \(error.userInfo)")
       }
@@ -42,7 +42,7 @@ class PreviouslyVotedPosts: NSObject, Codable {
   private func saveData() {
     let encoder = PropertyListEncoder()
     do {
-      let data = try encoder.encode(votedPosts)
+      let data = try encoder.encode(previouslyVotedPosts)
       try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
     } catch let error as NSError {
       print("\(error): \(error.userInfo)")
@@ -50,7 +50,7 @@ class PreviouslyVotedPosts: NSObject, Codable {
   }
   
   func addToVotedPosts(_ postUUID: UUID) {
-    votedPosts.append(postUUID)
+    previouslyVotedPosts.insert(postUUID)
   }
   
   func filterRepeat(_ postUIDStrings: [String]) -> [UUID]? {
@@ -61,7 +61,7 @@ class PreviouslyVotedPosts: NSObject, Codable {
   
   func filterRepeat(_ postUIDs: [UUID]) -> [UUID]? {
     return postUIDs.filter({ (postUID) -> Bool in
-      !votedPosts.contains(postUID)
+      !previouslyVotedPosts.contains(postUID)
     })
   }
 }

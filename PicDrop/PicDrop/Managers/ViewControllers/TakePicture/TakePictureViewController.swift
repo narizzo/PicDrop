@@ -12,17 +12,16 @@ import FirebaseStorage
 import FirebaseDatabase
 import FirebaseAuth
 
-fileprivate enum State {
-  case needsPicture
-  case hasPicture
+fileprivate enum PictureTakenState {
+  case hasNotTakenPicture
+  case hasTakenPicture
   case canceled
 }
 
-class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLLocationManagerDelegate {
+class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   private var imagePicker = UIImagePickerController()
-  private var state: State = State.needsPicture
-  var locationManager: LocationManager?
+  private var state = PictureTakenState.hasNotTakenPicture
   var networkManager: NetworkManager?
   
   override func viewDidLoad() {
@@ -34,7 +33,7 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     
     // Either take picture or dismiss this VC
     switch state {
-    case .needsPicture:
+    case .hasNotTakenPicture:
       verifyPhotoAuth()
     case .canceled:
       fallthrough
@@ -45,23 +44,17 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   private func verifyPhotoAuth() {
     if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
-      //locationManager.delegate = self
       shootPhoto()
     } else {
-      locationManager?.requestWhenInUseAuthorization()
+      LocationSingleton.shared.locationManager.requestWhenInUseAuthorization()
     }
   }
   
   func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-    if status == .authorizedWhenInUse {
-      verifyPhotoAuth()
-    }
+    verifyPhotoAuth()
   }
   
   private func shootPhoto() {
-    locationManager?.setAccuracyForPostingPhotos()
-    locationManager?.startUpdatingLocation()
-    
     if UIImagePickerController.isSourceTypeAvailable(.camera) {
       imagePicker.delegate = self
       imagePicker.sourceType = .camera;
@@ -90,15 +83,9 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
   
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-    //LocationManager.shared.locationManager.stopUpdatingLocation()
-    locationManager?.stopUpdatingLocation()
-    state = .hasPicture
+    state = .hasTakenPicture
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-      guard let location = locationManager?.location else {
-        print("Error: Location not valid")
-        return
-      }
-      networkManager?.uploadPhotoToStorage(photo: image, location: location)
+      //networkManager?.uploadPhotoToStorage(photo: image)
     }
     dismiss(animated: true, completion: nil)
   }

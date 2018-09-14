@@ -59,7 +59,27 @@ enum Constants {
   
   // MARK: - KVO Notification
   enum NotificationName {
-    static let nearbyPostsName = Notification.Name("com.adriftingup.nearbyPosts")
+    static let nearbyPosts = Notification.Name("com.adriftingup.nearbyPosts")
+    static let imageDataHasDownloaded = Notification.Name("com.adriftingup.imageDataHasDownloaded")
+  }
+  
+  // MARK: - Operation
+  enum OperationState {
+    static let isCancelled = "isCancelled"
+    static let isAsynchronous = "isAsynchronous"
+    static let isExecuting = "isExecuting"
+    static let isFinished = "isFinished"
+    static let isReady = "isReady"
+    static let dependencies = "dependencies"
+    static let queuePriority = "queuePriority"
+    static let completionBlock = "completionBlock"
+  }
+  
+  // MARK: - UserInfo
+  enum UserInfo {
+    enum Key {
+      static let photo = "photo"
+    }
   }
   
 }

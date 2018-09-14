@@ -6,23 +6,25 @@
 //  Copyright © 2018 Nicholas Rizzo. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
-class Cache: NSObject {
+class Cache: CacheService { // NSObject ??
   
-  var coreDataStack: CoreDataStack!
+  // MARK: - Internal
   let previouslyVotedPosts = PreviouslyVotedPosts()
   
-  private lazy var nearbyPosts: NearbyPosts = {
-    let np = NearbyPosts(entity: NearbyPosts.entity(), insertInto: coreDataStack.managedContext)
-    coreDataStack.managedContext.insert(np)
-    return np
-  }()
+  private var nearbyPosts = [Post]() // change to [UUID](?)
   
-  init(_ coreDataStack: CoreDataStack) {
-    super.init()
-    self.coreDataStack = coreDataStack
+  func process(_ imageData: Data, for postID: String) {
+    guard let image = UIImage(data: imageData),
+      let uuid = UUID(uuidString: postID) else {
+        return
+    }
+    
+    let photo = Photo(uuid: uuid, image: image)
+    
+    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.imageDataHasDownloaded.rawValue), object: nil, userInfo: [Constants.UserInfo.Key.photo: photo])
   }
   
   func process(_ nearbyPostKeys: [String]) {
@@ -40,69 +42,20 @@ class Cache: NSObject {
     clearNearbyPostsCache()
     
     newKeys.forEach { (key) in
-      let post = Post(entity: Post.entity(), insertInto: coreDataStack.managedContext)
-      post.setValue(key, forKey: "uuid")
-      nearbyPosts.addToPosts(post)
+      print(key)
+      //nearbyPosts.addToPosts(post)
     }
+    
     notifyCacheDataHasChanged()
   }
   
-  private func notifyCacheDataHasChanged() {
-    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.nearbyPostsName.rawValue), object: nil, userInfo: ["nearbyPosts": nearbyPosts])
+  func notifyCacheDataHasChanged() {
+    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.nearbyPosts.rawValue), object: nil, userInfo: ["nearbyPosts": nearbyPosts])
   }
   
   // Clear old geoCircle query results
   private func clearNearbyPostsCache() {
-    guard let posts = nearbyPosts.posts else {
-      return
-    }
-    nearbyPosts.removeFromPosts(posts)
+    nearbyPosts.removeAll()
   }
 
 }
-
-//extension Cache: NSFetchedResultsControllerDelegate {
-//
-//  func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-//    // fire off observable
-//    print("controllerDidChangeContent")
-//    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.nearbyPostsName.rawValue), object: nil, userInfo: ["nearbyPosts": nearbyPosts])
-//  }
-//
-//}
-
-// ensure that nearbyPosts exists - if not - make one
-//  private lazy var nearbyPosts: NearbyPosts = {
-//    var np: NearbyPosts
-//    if let fetchedPosts = fetchedResultsController.fetchedObjects?.first {
-//      np = fetchedPosts
-//    } else {
-//      np = NearbyPosts(entity: NearbyPosts.entity(), insertInto: coreDataStack.managedContext)
-//    }
-//    return np
-//  }()
-
-//  private var nearbyPosts: NearbyPosts {
-//    get {
-//      if let nearbyPosts = nearbyPosts {
-//        return nearbyPosts
-//      } else {
-//        let nearbyPosts = NearbyPosts(entity: NearbyPosts.entity(), insertInto: coreDataStack.managedContext)
-//        coreDataStack.managedContext.insert(nearbyPosts)
-//        return nearbyPosts
-//      }
-//    }
-//  }
-
-//  lazy var fetchedResultsController: NSFetchedResultsController<NearbyPosts> = {
-//    let fetchRequest: NSFetchRequest<NearbyPosts> = NearbyPosts.fetchRequest()
-//    fetchRequest.sortDescriptors = []
-//
-//    let fetchedResultsController = NSFetchedResultsController(
-//      fetchRequest: fetchRequest,
-//      managedObjectContext: coreDataStack.managedContext,
-//      sectionNameKeyPath: nil,
-//      cacheName: nil)
-//    fetchedResultsController.delegate = self
-//    return fetchedResultsController
-//  }()

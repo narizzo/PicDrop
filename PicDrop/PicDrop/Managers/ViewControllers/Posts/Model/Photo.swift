@@ -9,11 +9,11 @@
 import UIKit
 
 struct Photo {
-  var id: String
+  var uuid: UUID
   var image: UIImage
   
-  init(id: String, image: UIImage) {
-    self.id = id
+  init(uuid: UUID, image: UIImage) {
+    self.uuid = uuid
     self.image = image
   }
 }
