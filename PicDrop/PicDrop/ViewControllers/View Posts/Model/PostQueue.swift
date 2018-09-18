@@ -9,16 +9,16 @@
 import UIKit
 
 protocol PhotoQueueDelegate: class {
-  func photoQueue(_ photoQueue: PhotoQueue, didReceivePhoto: Bool)
+  func photoQueue(_ photoQueue: PostQueue, didReceivePhoto: Bool)
 }
 
-class PhotoQueue {
+class PostQueue {
   
   // MARK: - Injection
   weak var delegate: PhotoQueueDelegate?
   
   // MARK: - Instance Variables
-  private var queue = [Photo]()
+  private var queue = [Post]()
   
   var count: Int {
     return queue.count
@@ -30,18 +30,18 @@ class PhotoQueue {
   }
   
   // MARK: - Methods
-  func peek() -> Photo? {
+  func peek() -> Post? {
     return queue.first
   }
   
-  func pop() -> Photo? {
+  func pop() -> Post? {
     if queue.count > 0 {
       return queue.removeFirst()
     }
     return nil
   }
   
-  func append(_ photo: Photo) {
+  func append(_ photo: Post) {
     queue.append(photo)
     delegate?.photoQueue(self, didReceivePhoto: true)
   }
@@ -55,7 +55,7 @@ class PhotoQueue {
 //    // can't call queue.popFirst() to optionally return Post for some reason...
 //  }
   
-  func remove(_ photo: Photo) {
+  func remove(_ photo: Post) {
     let indexOfPostID = queue.index { $0.uuid == photo.uuid }
     if let index = indexOfPostID {
       queue.remove(at: index)

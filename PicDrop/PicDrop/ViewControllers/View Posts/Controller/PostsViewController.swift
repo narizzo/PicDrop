@@ -12,13 +12,22 @@ import FirebaseAuth
 class PostsViewController: UIViewController {
   
   // MARK: - Injection
-  private var networkManager: NetworkManager?
+  private var networkManager: NetworkManager
+  private lazy var cacheObserver: NSKeyValueObservation = {
+    let co = networkManager.cache.observe(\.nearbyKeys, options: [.new]) { (_, change) in
+      guard let newKeys = change.newValue else {
+        return
+      }
+      self.keyQueue.replaceQueue(with: newKeys)
+    }
+    return co
+  }()
   
   // MARK: - Instance Variables
-  /* Public */
-  lazy var postQueue = PostQueue(delegate: self)
-  lazy var photoQueue = PhotoQueue(delegate: self)
-  lazy var postsView: PostsView = {
+  /* File Private */
+  fileprivate lazy var keyQueue = KeyQueue(delegate: self)
+  fileprivate lazy var photoQueue = PostQueue(delegate: self)
+  fileprivate lazy var postsView: PostsView = {
     let pv = PostsView()
     pv.delegate = self
     return pv
@@ -37,7 +46,7 @@ class PostsViewController: UIViewController {
   }
   
   required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+    fatalError("NetworkManager was not passed from AppDelegate")
   }
   
   // MARK: Lifecycle
@@ -52,11 +61,11 @@ class PostsViewController: UIViewController {
   
   // MARK: - Network Calls
   func fetchData() {
-    networkManager?.fetchPosts()
+    networkManager.fetchPosts()
   }
   
   func fetchPhoto() {
-    if let post = postQueue.popFirstPost() {
+    if let post = keyQueue.popFirstKey() {
       //networkManager?.fetchPhoto(for: post)
     }
   }
@@ -79,16 +88,16 @@ extension PostsViewController: TinderImageViewManagerDelegate {
 
 extension PostsViewController: PhotoQueueDelegate {
   
-  func photoQueue(_ photoQueue: PhotoQueue, didReceivePhoto: Bool) {
+  func photoQueue(_ photoQueue: PostQueue, didReceivePhoto: Bool) {
     if postsView.tinderImageViewManager.state == .needsPhoto {
       postsView.tinderImageViewManager.feedNext(photoQueue.pop()!)
     }
   }
   
 }
-extension PostsViewController: PostQueueDelegate {
+extension PostsViewController: KeyQueueDelegate {
   
-  func postQueue(_ postQueue: PostQueue, needsMorePosts: Bool) {
+  func keyQueue(_ postQueue: KeyQueue, needsMoreKeys: Bool) {
     fetchData()
   }
   

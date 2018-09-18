@@ -14,7 +14,6 @@ class PreviouslyVotedPosts: NSObject, Codable {
 
   override init() {
     super.init()
-    loadData()
   }
   
   
@@ -24,7 +23,8 @@ class PreviouslyVotedPosts: NSObject, Codable {
   }
   
   private func dataFilePath() -> URL {
-    return documentsDirectory().appendingPathComponent("previouslyVotedPosts.plist")
+    return documentsDirectory().appendingPathComponent("previouslyVotedPosts.plist") // use logged in user's id + "previouslyVotedPosts.plist"?
+    // allow user to delete local storage of keys.
   }
   
   private func loadData() {

@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import CoreData
 
-class Cache: CacheService { // NSObject ??
+class Cache: NSObject {
   
   // MARK: - Internal
-  let previouslyVotedPosts = PreviouslyVotedPosts()
+  private let previouslyVotedPosts = PreviouslyVotedPosts()
   
   private var nearbyPosts = [Post]() // change to [UUID](?)
+  @objc private(set) dynamic var nearbyKeys = [UUID]()
   
   func process(_ imageData: Data, for postID: String) {
     guard let image = UIImage(data: imageData),
@@ -22,40 +22,20 @@ class Cache: CacheService { // NSObject ??
         return
     }
     
-    let photo = Photo(uuid: uuid, image: image)
+    //let photo = Photo(uuid: uuid, image: image)
     
-    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.imageDataHasDownloaded.rawValue), object: nil, userInfo: [Constants.UserInfo.Key.photo: photo])
+    //NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.imageDataHasDownloaded.rawValue), object: nil, userInfo: [Constants.UserInfo.Key.photo: photo])
   }
   
-  func process(_ nearbyPostKeys: [String]) {
-    /*  check for newKeys,
-        if there are new keys: clear old keys, add new keys, and send out notification
-        if none, return
-    */
-    guard let newKeys = previouslyVotedPosts.filterRepeat(nearbyPostKeys) else {
+  func processKeys(_ keys: [String]) {
+    guard let newKeys = previouslyVotedPosts.filterRepeat(keys) else {
       return
     }
     update(nearbyPostKeys: newKeys)
   }
   
   private func update(nearbyPostKeys newKeys: [UUID]) {
-    clearNearbyPostsCache()
-    
-    newKeys.forEach { (key) in
-      print(key)
-      //nearbyPosts.addToPosts(post)
-    }
-    
-    notifyCacheDataHasChanged()
+    guard newKeys.count > 0 else { return }  // if there aren't any new keys then the app should continue working with the old keys
+    nearbyKeys = newKeys
   }
-  
-  func notifyCacheDataHasChanged() {
-    NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.nearbyPosts.rawValue), object: nil, userInfo: ["nearbyPosts": nearbyPosts])
-  }
-  
-  // Clear old geoCircle query results
-  private func clearNearbyPostsCache() {
-    nearbyPosts.removeAll()
-  }
-
 }

@@ -18,12 +18,12 @@ class LocationQueryOperation: AsynchronousOperation {
   
   private let geoFireRef = GeoFire(firebaseRef: Constants.Firebase.Database.postLocationsRef)
   private var location: CLLocation?
-  //private let handler: ([String]) -> Void
+  private let handler: ([String]) -> Void
   
-//  init(handler: @escaping ([String]) -> Void) {
-//    self.handler = handler
-//    super.init()
-//  }
+  init(handler: @escaping ([String]) -> Void) {
+    self.handler = handler
+    super.init()
+  }
   
   override func main() {
     if let dependencyLocationProvider = dependencies
@@ -39,14 +39,12 @@ class LocationQueryOperation: AsynchronousOperation {
     
     var nearbyPostKeysCollector = [String]()
     let circleQuery = geoFireRef.query(at: location, withRadius: location.horizontalAccuracy)
-    
     let _ = circleQuery.observe(.keyEntered) { (key, location) in
       nearbyPostKeysCollector.append(key)
     }
     
     circleQuery.observeReady { [weak self] in
-      //self?.handler(nearbyPostKeysCollector)
-      print(nearbyPostKeysCollector)
+      self?.handler(nearbyPostKeysCollector)
       circleQuery.removeAllObservers()
       self?.finish()
     }

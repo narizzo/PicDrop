@@ -8,7 +8,7 @@
 
 import Foundation
 
-//class LoadModelOperation: Operation {
+//class LoadModelOperation: AsynchronousOperation {
 //  
 //  let loadHandler:
 //  

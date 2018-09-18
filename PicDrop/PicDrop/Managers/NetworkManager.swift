@@ -14,29 +14,29 @@ import GeoFire
 
 class NetworkManager: NSObject {
   
-  // MARK: - Internal
-  private var cache: Cache
+  // MARK: - Instance Variables
+  var cache: Cache
   private let geoFireRef = GeoFire(firebaseRef: Constants.Firebase.Database.postLocationsRef)
   private lazy var operationQueue: OperationQueue = {
     let oq = OperationQueue()
     oq.qualityOfService = .userInitiated
-    oq.maxConcurrentOperationCount = 1
+    //oq.maxConcurrentOperationCount = 1 // shouldn't need this considering its a serial queue
     return oq
   }()
   
   // MARK: - Init
-  init(cache: Cache = Cache()) {
+  init(cache: Cache) {
     self.cache = cache
     super.init()
   }
   
-  let locationHandler: (CLLocation) -> Void = {
-    print($0)
+  private lazy var keysHandler: ([String]) -> Void = { [weak cache] in
+    cache?.processKeys($0)
   }
   // MARK: - Query Location + Download
   func fetchPosts() {
     let locationOperation = LocationOperation()
-    let locationQueryOperation = LocationQueryOperation()
+    let locationQueryOperation = LocationQueryOperation(handler: keysHandler)
     locationQueryOperation.addDependency(locationOperation)
     operationQueue.addOperations([locationOperation, locationQueryOperation], waitUntilFinished: false)
   }

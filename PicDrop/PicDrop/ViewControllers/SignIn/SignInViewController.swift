@@ -9,7 +9,6 @@
 import UIKit
 import CoreLocation
 import FirebaseAuth
-//import GoogleSignIn
 
 class SignInViewController: UIViewController {
   
@@ -35,8 +34,7 @@ class SignInViewController: UIViewController {
   }
   
   required init?(coder aDecoder: NSCoder) {
-    networkManager = NetworkManager()
-    super.init(coder: aDecoder)
+    fatalError("NetworkManager was not passed from AppDelegate")
   }
   
   // MARK: - LifeCycle
