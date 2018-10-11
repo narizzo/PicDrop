@@ -16,44 +16,39 @@ import AVFoundation
 class RequestCameraAccessOperation: Operation {
   
   let imagePicker = UIImagePickerController()
-  // error property
-  var error: OperationError?
-  
-  override init() {
-    super.init()
-    print("RequestCameraAccess Operation init")
-    completionBlock = { [weak self] in
-      if let _ = self?.error {
-        // alertUserOperation(with: error)  // put 'error checker' in operation queue to present this error from a single place instead of presenting error from this or some other operation
-        self?.cancel()
-      }
-    }
-  }
+  var error: AVError.Code?
   
   override func main() {
-    if isCancelled { return }
+    print("RequestCameraAccess main")
+    if isCancelled {
+      return
+    }
     
     let available = UIImagePickerController.isSourceTypeAvailable(.camera)
     let status = AVCaptureDevice.authorizationStatus(for: .video)
-    
+  
     switch (available, status) {
     case (false, _):
-      error = .failed("This device does not have a camera")
+      //error = .failed("This device does not have a camera")
+      error = AVError.contentIsUnavailable
     case (true, .authorized):
       break
     case (true, .notDetermined):
       AVCaptureDevice.requestAccess(for: .video) { accessGranted in
         if !accessGranted {
-          // set error
+          self.error = AVError.applicationIsNotAuthorizedToUseDevice
         }
       }
     case (true, _):
-      error = .failed("PicDrop is not authorized to use this device's camera")
+      error = AVError.unknown
     }
+    self.cancel()
     
-    if let error = error {
-      print("Alert Mockup: \(error.localizedDescription)")
-    }
+    
+    print("RequestCameraAccess.isCancelled: \(isCancelled)")
+//    if let error = error {
+//      self.cancel()
+//    }
   }
   
 }

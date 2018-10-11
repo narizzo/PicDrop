@@ -9,11 +9,16 @@
 import Foundation
 
 extension PostsViewController: CacheDelegate {
+  
+  func cacheDidFailToUpdateWithNewUUIds(_ cache: Cache) {
+    networkManager.fetchNearbyPostUUIDs()
+  }
+  
   func cache(_ cache: Cache, didUpdateUUIDs uuids: [UUID]) {
     uuidQueue.replaceElements(with: uuids)
   }
   
-  func cache(_ cache: Cache, didUpdatePosts posts: [Post]) {
+  func cache(_ cache: Cache, didUpdatePosts posts: [PartialPost]) {
     postQueue.replaceElements(with: posts)
   }
 }

@@ -13,8 +13,10 @@ import FirebaseAuth
 class SignInViewController: UIViewController {
   
   // MARK: - Injection
-  private var networkManager: NetworkManager
+  private let networkManager: NetworkManager
+  private let locationManager: CLLocationManager // only exists here to pass to the next view controller i.e. PostsViewController
   
+  // MARK: - Properties
   private var picDropLabel = UILabel()
   private var signInErrorLabel = UILabel()
   
@@ -28,8 +30,9 @@ class SignInViewController: UIViewController {
   private var forgotCredentialsButton = UIButton()
   
   // MARK: - Init
-  init(networkManager: NetworkManager) {
+  init(networkManager: NetworkManager, locationManager: CLLocationManager) {
     self.networkManager = networkManager
+    self.locationManager = locationManager
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -255,7 +258,7 @@ class SignInViewController: UIViewController {
   }
   
   func showPostsViewController() {
-    let seePostsVC = PostsViewController(networkManager: networkManager)
+    let seePostsVC = PostsViewController(networkManager: networkManager, locationManager: locationManager)
     present(seePostsVC, animated: true, completion: nil)
   }
   

@@ -11,7 +11,7 @@
 import Foundation
 
 protocol QueueDelegate: class {
-  func queueDidRequestRefresh<T>(_ queue: Queue<T>)
+  func queueDidRequestElements<T>(_ queue: Queue<T>)
   func queueDidRecieveElements<T>(_ queue: Queue<T>)
 }
 
@@ -25,8 +25,9 @@ class Queue<T> {
   private var elements = [T]() {
     didSet {
       if elements.count <= needsMoreElementsThreshold {
-        delegate?.queueDidRequestRefresh(self)
+        delegate?.queueDidRequestElements(self)
       }
+      delegate?.queueDidRecieveElements(self)
     }
   }
   

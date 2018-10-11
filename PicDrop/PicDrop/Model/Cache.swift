@@ -10,7 +10,8 @@ import UIKit
 
 protocol CacheDelegate: class {
   func cache(_ cache: Cache, didUpdateUUIDs uuids: [UUID])
-  func cache(_ cache: Cache, didUpdatePosts posts: [Post])
+  func cache(_ cache: Cache, didUpdatePosts posts: [PartialPost])
+  func cacheDidFailToUpdateWithNewUUIds(_ cache: Cache)
 }
 
 class Cache {
@@ -19,45 +20,38 @@ class Cache {
   weak var delegate: CacheDelegate?
   
   // MARK: - Properties
-  private let previouslyVotedPosts = PreviouslyVotedPosts()
+  private var previouslyVotedPosts = PreviouslyVotedPosts()
   private var newUUIDs = [UUID]() {
     didSet {
       delegate?.cache(self, didUpdateUUIDs: newUUIDs)
     }
   }
-  private var newPosts = [Post]() {
+  private var newPosts = [PartialPost]() {
     didSet {
       delegate?.cache(self, didUpdatePosts: newPosts)
     }
   }
   
-//  @objc private(set) dynamic var newUUIDs = [UUID]()
-//  @objc private(set) dynamic var newPosts = [Post]()
-  
   // MARK: - Methods
-  func process(_ imageData: Data, for uuid: UUID) {
-    guard let image = UIImage(data: imageData) else {
-      return
-    }
-    
-    //let photo = Photo(uuid: uuid, image: image)
-    
-    //NotificationCenter.default.post(name: NSNotification.Name(Constants.NotificationName.imageDataHasDownloaded.rawValue), object: nil, userInfo: [Constants.UserInfo.Key.photo: photo])
-  }
-  
-  func process(new post: Post) {
-    
+  func processPartialPost(_ partialPost: PartialPost) {
+    newPosts.append(partialPost)
   }
   
   func processKeys(_ keys: [String]) {
-    guard let newKeys = previouslyVotedPosts.filterRepeat(keys) else {
+    // if there aren't any new keys then the app should continue working with the old keys
+    guard let newKeys = previouslyVotedPosts.filterRepeat(keys),
+      newKeys.count > 0 else {
+      delegate?.cacheDidFailToUpdateWithNewUUIds(self)
       return
     }
-    update(nearbyPostKeys: newKeys)
+    
+    newUUIDs = newKeys
+    print(newUUIDs.forEach { uuid in print("\(uuid)")})
   }
   
-  private func update(nearbyPostKeys newKeys: [UUID]) {
-    guard newKeys.count > 0 else { return }  // if there aren't any new keys then the app should continue working with the old keys
-    newUUIDs = newKeys
+  // the user shouldn't see his/her own posts, therefore we add the uuid of their post locally, so that we can filter it out of query results without having to download the updated list of previouslyVotedPosts on the server for that user.
+  func processPostCreatedByUser(_ post: Post) {
+    previouslyVotedPosts.add(postUUID: post.uuid)
   }
+  
 }

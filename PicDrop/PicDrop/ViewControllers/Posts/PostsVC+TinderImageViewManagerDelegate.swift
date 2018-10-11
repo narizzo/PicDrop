@@ -9,7 +9,8 @@
 import Foundation
 
 extension PostsViewController: TinderImageViewManagerDelegate {
-  func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote, for post: Post) {
+  
+  func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote, for post: PartialPost) {
     networkManager.vote(on: post, with: vote)
     self.feedNextPostToTinderImageViewManager()
   }

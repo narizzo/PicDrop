@@ -7,33 +7,31 @@
 //
 
 import UIKit
+import CoreLocation
 import FirebaseAuth
 
 class PostsViewController: UIViewController {
   
+  // MARK: - Injection
+  let networkManager: NetworkManager
+  let locationManager: CLLocationManager
+  
   // MARK: Properties
-  /* Internal */
   let operationQueue = OperationQueue()
-  
   lazy var uuidQueue = Queue<UUID>(delegate: self)
-  lazy var postQueue = Queue<Post>(delegate: self, needsMoreElementsThreshold: 3)
-  
+  lazy var postQueue = Queue<PartialPost>(delegate: self, needsMoreElementsThreshold: 3)
   private var postsView = PostsView()
-  
-  /* Injections */
-  var networkManager: NetworkManager
-  
-  /* Override */
   override var prefersStatusBarHidden: Bool {
     return true
   }
   
   // MARK: - Init
-  init(networkManager: NetworkManager) {
+  init(networkManager: NetworkManager, locationManager: CLLocationManager) {
     self.networkManager = networkManager
+    self.locationManager = locationManager
+    
     super.init(nibName: nil, bundle: nil)
     
-    // change to KVO?
     self.networkManager.cache.delegate = self
   }
   
@@ -45,20 +43,13 @@ class PostsViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     fetchData()
+    
   }
   
   override func viewDidAppear(_ animated: Bool) {
     // change so that self.view = postsView?
     postsView.delegate = self
     self.view.addSubview(postsView)
-  }
-  
-  // MARK: - Post Propagation
-  func feedNextPostToTinderImageViewManager() {
-    let tivm = postsView.tinderImageViewManager
-    if tivm.needsPost, let post = postQueue.pop() {
-      tivm.feedNext(post)
-    }
   }
   
   // MARK: - Network Calls
@@ -69,6 +60,14 @@ class PostsViewController: UIViewController {
   func fetchPost() {
     if let uuid = uuidQueue.pop() {
       networkManager.fetchData(for: uuid)
+    }
+  }
+  
+  // MARK: - Post Propagation
+  func feedNextPostToTinderImageViewManager() {
+    let tivm = postsView.tinderImageViewManager
+    if tivm.needsPost, let post = postQueue.pop() {
+      tivm.feedNext(post)
     }
   }
 }

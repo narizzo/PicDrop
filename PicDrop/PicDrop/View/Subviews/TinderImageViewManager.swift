@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TinderImageViewManagerDelegate: class {
-  func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote, for post: Post)
+  func tinderImageViewManager(_ tinderImageViewManager: TinderImageViewManager, didVote vote: PostVote, for post: PartialPost)
 }
 
 class TinderImageViewManager: UIView {
@@ -70,7 +70,7 @@ class TinderImageViewManager: UIView {
     self.bringSubview(toFront: backView)
   }
   
-  private func setBackViewImage(to post: Post) {
+  private func setBackViewImage(to post: PartialPost) {
     guard let tinderImageView = subviews.first as? TinderImageView else {
       return
     }
@@ -78,14 +78,16 @@ class TinderImageViewManager: UIView {
     presentNewPost()
   }
   
-  func feedNext(_ post: Post) {
+  func feedNext(_ post: PartialPost) {
     setBackViewImage(to: post)
   }
   
 }
 
+
 extension TinderImageViewManager: TinderImageViewDelegate {
-  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote, for post: Post) {
+  
+  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote, for post: PartialPost) {
     presentNewPost()
     delegate?.tinderImageViewManager(self, didVote: vote, for: post)
   }

@@ -8,31 +8,27 @@
 
 import UIKit
 import CoreLocation
-import FirebaseStorage
-import FirebaseDatabase
-import FirebaseAuth
-
-fileprivate enum PictureTakenState {
-  case hasNotTakenPicture
-  case hasTakenPicture
-  case canceled
-}
 
 class TakePictureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  //private var state = PictureTakenState.hasNotTakenPicture
+  // MARK: - Injection
+  private let networkManager: NetworkManager
+  private let locationManager: CLLocationManager
   
+  // MARK: - Properties
   private var imagePicker = UIImagePickerController()
   private let operationQueue: OperationQueue = {
     let oq = OperationQueue()
     oq.name = "TakePictureVC OperationQueue"
     return oq
   }()
-  var networkManager: NetworkManager?
+  
   var image: UIImage?
   
-  init(networkManager: NetworkManager) {
+  // MARK: - Init
+  init(networkManager: NetworkManager, locationManager: CLLocationManager) {
     self.networkManager = networkManager
+    self.locationManager = locationManager
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -40,72 +36,47 @@ class TakePictureViewController: UIViewController, UIImagePickerControllerDelega
     fatalError("init(coder:) has not been implemented")
   }
   
+  // MARK: - Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
     shootPhoto()
   }
   
   
-  // Take a picture and get the location that the photo was taken at.  Pass these to the network manager upon completion
-  // Should add a completion to the end of this group/operation to pop this ViewController
+  // MARK: - Methods
   private func shootPhoto() {
+    // Take a picture and get the location that the photo was taken at.  Pass these to the network manager upon completion
+    
+    // operations never execute...
+//    let takePictureOpGroup = TakePictureOperationGroup(viewController: self, networkManager: networkManager, locationManager: locationManager)
+//    operationQueue.addOperation(takePictureOpGroup)
+    
     let requestCameraAccessOp = RequestCameraAccessOperation()
     let requestLocationWhenInUseOp = RequestLocationWhenInUseOperation()
-    
+
     let takePictureOp = TakePictureOperation(viewController: self)
-    
-    let locationOp = LocationOperation()
+
+    let locationOp = GetLocationOperation()
     locationOp.completionBlock = { [weak networkManager, unowned self] in
-      let post = Post(uuid: UUID(), image: takePictureOp.image!, location: locationOp.location!)
-      networkManager?.upload(post: post)
+      guard let image = takePictureOp.image
+        //let location = locationOp.location else {
+      else {
+          self.dismiss(animated: true, completion: nil)
+          return
+      }
+//      let post = Post(uuid: UUID(), image: image, location: location)
+//      networkManager?.upload(post: post)
       self.dismiss(animated: true, completion: nil)
     }
-    
+
     requestLocationWhenInUseOp.addDependency(requestCameraAccessOp)
     takePictureOp.addDependency(requestLocationWhenInUseOp)
     locationOp.addDependency(takePictureOp)
 
-//    let operationGroup = OperationGroup()
-//    operationGroup.add(
-//      operations: [requestCameraAccessOp,
-//                   requestLocationWhenInUseOp,
-//                   takePictureOp,
-//                   locationOp])
-//    operationGroup.finishingOperation = BlockOperation { [weak networkManager] in
-//      let post = Post(uuid: UUID(), image: takePictureOp.image!, location: locationOp.location!)
-//      networkManager?.upload(post: post)
-//    }
-    
-    //operationQueue.addOperation(operationGroup)
-    
     operationQueue.addOperations([requestCameraAccessOp,
                                   requestLocationWhenInUseOp,
                                   takePictureOp,
                                   locationOp],
                                  waitUntilFinished: false)
-    
   }
-  
-//  func alertUserNoCamera() {
-//    let alertVC = UIAlertController(title: "No Camera", message: "This device does not have a camera", preferredStyle: .alert)
-//    let okAction = UIAlertAction(title: "OK", style: .default) { alertAction in
-//      self.dismiss(animated: true, completion: nil)
-//    }
-//    alertVC.addAction(okAction)
-//    present(alertVC, animated: true, completion: nil)
-//  }
-//
-//  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-//    state = .canceled
-//    dismiss(animated: true, completion: nil)
-//  }
-//
-//
-//  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-//    state = .hasTakenPicture
-//    image = info[UIImagePickerControllerOriginalImage] as? UIImage
-//      //networkManager?.uploadImageToStorage(image)
-//    dismiss(animated: true, completion: nil)
-//  }
-  
 }

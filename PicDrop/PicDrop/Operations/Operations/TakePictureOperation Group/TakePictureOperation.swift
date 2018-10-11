@@ -10,12 +10,13 @@ import UIKit
 
 class TakePictureOperation: AsynchronousOperation, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  weak var viewController: UIViewController?
+  //weak var viewController: UIViewController?
+  var viewController: UIViewController
   var image: UIImage?
   
   init(viewController: UIViewController) {
+    print("3. TakePicture init")
     self.viewController = viewController
-    print("TakePicture Operation init")
   }
   
   private lazy var imagePicker: UIImagePickerController = {
@@ -28,36 +29,24 @@ class TakePictureOperation: AsynchronousOperation, UIImagePickerControllerDelega
   }()
   
   override func main() {
+    if isCancelled { finish() }
     DispatchQueue.main.async {
-      self.viewController?.present(self.imagePicker, animated: true, completion: nil)
+      self.viewController.present(self.imagePicker, animated: true, completion: nil)
     }
   }
   
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    viewController?.dismiss(animated: true, completion: nil)
+    viewController.dismiss(animated: true, completion: nil)
+    print("TakePicture finish")
     finish()
   }
   
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     image = info[UIImagePickerControllerOriginalImage] as? UIImage
-    viewController?.dismiss(animated: true, completion: nil)
+    viewController.dismiss(animated: true, completion: nil)
+    print("TakePicture finish")
     finish()
   }
   
 }
-
-
-
-
-
-//    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-//      imagePicker.delegate = self
-//      imagePicker.sourceType = .camera;
-//      imagePicker.cameraFlashMode = .off
-//      imagePicker.allowsEditing = false
-//
-//      self.present(imagePicker, animated: true, completion: nil)
-//    } else {
-//      alertUserNoCamera()
-//    }

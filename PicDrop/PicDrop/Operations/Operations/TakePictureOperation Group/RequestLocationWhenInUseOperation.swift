@@ -11,16 +11,13 @@ import CoreLocation
 
 class RequestLocationWhenInUseOperation: Operation {
   
-  let locationManager = CLLocationManager()
   var error: OperationError?
   
-  override init() {
-    print("RequestLocationWhenInUse Operation init")
-  }
-  
-  
   override func main() {
-    if isCancelled { return }
+    print("RequestLocationWhenInUse.isCancelled: \(isCancelled)")
+    if isCancelled {
+      return
+    }
     
     // check for service before this?  See if the phone is in airplane mode or has no service
     let enabled = CLLocationManager.locationServicesEnabled()
@@ -40,6 +37,7 @@ class RequestLocationWhenInUseOperation: Operation {
 //    } else {
 //      completion(.satisfied)
 //    }
+    print("RequestLocationWhenInUse finished")
   }
   
 }

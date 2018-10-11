@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import CoreLocation
 import FirebaseAuth
 
 class RootViewController: UIViewController {
   
-  var networkManager: NetworkManager
+  private let networkManager: NetworkManager
+  private let locationManager: CLLocationManager
   
-  init(networkManager: NetworkManager) {
+  init(networkManager: NetworkManager, locationManager: CLLocationManager) {
     self.networkManager = networkManager
+    self.locationManager = locationManager
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -25,9 +28,9 @@ class RootViewController: UIViewController {
   override func viewDidAppear(_ animated: Bool) {
     // this code is in viewDidAppear rather than viewDidLoad because the view that is supposed to present the next vc is not ready in viewDidLoad
     if let _ = Auth.auth().currentUser {
-      self.present(PostsViewController(networkManager: networkManager), animated: true)
+      self.present(PostsViewController(networkManager: networkManager, locationManager: locationManager), animated: true)
     } else {
-      self.present(SignInViewController(networkManager: networkManager), animated: true)
+      self.present(SignInViewController(networkManager: networkManager, locationManager: locationManager), animated: true)
     }
   }
   

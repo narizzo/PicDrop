@@ -9,11 +9,11 @@
 import UIKit
 
 extension PostsViewController: QueueDelegate {
-  func queueDidRequestRefresh<T>(_ queue: Queue<T>) {
+  func queueDidRequestElements<T>(_ queue: Queue<T>) {
     switch T.self {
     case is UUID.Type:
       fetchData()
-    case is Post.Type:
+    case is PartialPost.Type:
       fetchPost()
     default:
       return
@@ -23,8 +23,8 @@ extension PostsViewController: QueueDelegate {
   func queueDidRecieveElements<T>(_ queue: Queue<T>) {
     switch T.self {
     case is UUID.Type:
-      return
-    case is Post.Type:
+      fetchPost()
+    case is PartialPost.Type:
       feedNextPostToTinderImageViewManager()
     default:
       return

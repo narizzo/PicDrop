@@ -9,6 +9,25 @@
 import UIKit
 import CoreLocation
 
+struct PartialPost {
+  var uuid: UUID
+  var image: UIImage
+  
+  init(uuid: UUID, image: UIImage) {
+    self.uuid = uuid
+    self.image = image
+  }
+}
+
+extension PartialPost {
+  typealias CompletionInfo = (location: CLLocation, downloadURL: URL)
+  
+  func completed(with info: CompletionInfo) -> Post {
+    return Post(uuid: uuid, image: image, location: info.location, downloadURL: info.downloadURL)
+  }
+}
+
+
 struct Post {
   private(set) var date: Date
   var uuid: UUID

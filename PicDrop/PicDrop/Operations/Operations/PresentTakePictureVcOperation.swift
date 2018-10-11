@@ -7,27 +7,24 @@
 //
 
 import UIKit
+import CoreLocation
 
 class PresentTakePictureVcOperation: Operation {
   
-  weak var viewController: UIViewController?
-  weak var networkManager: NetworkManager?
+  private let viewController: UIViewController
+  private let networkManager: NetworkManager
+  private let locationManager: CLLocationManager
   
-  init(viewController: UIViewController, networkManager: NetworkManager) {
+  init(viewController: UIViewController, networkManager: NetworkManager, locationManager: CLLocationManager) {
     self.viewController = viewController
     self.networkManager = networkManager
+    self.locationManager = locationManager
   }
   
   override func main() {
-    guard let viewController = self.viewController,
-      let networkManager = self.networkManager else {
-      self.cancel()
-      return
-    }
     DispatchQueue.main.async {
-      let takePictureVC = TakePictureViewController(networkManager: networkManager)
-      takePictureVC.networkManager = networkManager
-      viewController.present(takePictureVC, animated: true, completion: nil)
+      let takePictureVC = TakePictureViewController(networkManager: self.networkManager, locationManager: self.locationManager)
+      self.viewController.present(takePictureVC, animated: true, completion: nil)
     }
   }
   

@@ -9,13 +9,13 @@
 import UIKit
 
 protocol TinderImageViewDelegate: class {
-  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote, for post: Post)
+  func tinderImageView(_ tinderImageView: TinderImageView, didVote vote: PostVote, for post: PartialPost)
 }
 
 class TinderImageView: UIImageView {
 
   // MARK: - Properties
-  var post: Post? {
+  var post: PartialPost? {
     didSet { self.image = post?.image }
   }
   
